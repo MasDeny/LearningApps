@@ -1,0 +1,56 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'i', '-g', 'ngrok' ]
+2 info using npm@3.5.2
+3 info using node@v8.10.0
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readGlobalPackageData
+7 silly fetchPackageMetaData ngrok
+8 silly fetchOtherPackageData ngrok
+9 silly cache add args [ 'ngrok', null ]
+10 verbose cache add spec ngrok
+11 silly cache add parsed spec Result {
+11 silly cache add   raw: 'ngrok',
+11 silly cache add   scope: null,
+11 silly cache add   name: null,
+11 silly cache add   rawSpec: 'ngrok',
+11 silly cache add   spec: '/mnt/d/php-project/learning/ngrok',
+11 silly cache add   type: 'local' }
+12 silly addLocalTarball shasum (computed) 882e8252c2aae5868f4fcc6a0ba4f2e21b1c3bc5
+13 verbose addTmpTarball /mnt/d/php-project/learning/ngrok not in flight; adding
+14 verbose makeDirectory /home/biang/.npm creation not in flight; initializing
+15 silly makeDirectory /home/biang/.npm uid: 1000 gid: 1000
+16 verbose addTmpTarball validating metadata from /mnt/d/php-project/learning/ngrok
+17 verbose tar unpack /mnt/d/php-project/learning/ngrok
+18 verbose tar unpacking to /tmp/npm-1047-1d1a34a2/unpack-a56fdf27
+19 silly gentlyRm /tmp/npm-1047-1d1a34a2/unpack-a56fdf27 is being purged
+20 verbose gentlyRm don't care about contents; nuking /tmp/npm-1047-1d1a34a2/unpack-a56fdf27
+21 silly gunzTarPerm modes [ '755', '644' ]
+22 error not a package /mnt/d/php-project/learning/ngrok
+23 error addLocal Could not install /mnt/d/php-project/learning/ngrok
+24 silly fetchPackageMetaData Error: ENOENT: no such file or directory, open '/tmp/npm-1047-1d1a34a2/unpack-a56fdf27/package.json'
+24 silly fetchPackageMetaData  error for ngrok { Error: ENOENT: no such file or directory, open '/tmp/npm-1047-1d1a34a2/unpack-a56fdf27/package.json'
+24 silly fetchPackageMetaData   errno: -2,
+24 silly fetchPackageMetaData   code: 'ENOENT',
+24 silly fetchPackageMetaData   syscall: 'open',
+24 silly fetchPackageMetaData   path: '/tmp/npm-1047-1d1a34a2/unpack-a56fdf27/package.json' }
+25 silly rollbackFailedOptional Starting
+26 silly rollbackFailedOptional Finishing
+27 silly runTopLevelLifecycles Starting
+28 silly runTopLevelLifecycles Finishing
+29 silly install printInstalled
+30 verbose stack Error: ENOENT: no such file or directory, open '/tmp/npm-1047-1d1a34a2/unpack-a56fdf27/package.json'
+31 verbose cwd /mnt/d/php-project/learning
+32 error Linux 4.19.84-microsoft-standard
+33 error argv "/usr/bin/node" "/usr/bin/npm" "i" "-g" "ngrok"
+34 error node v8.10.0
+35 error npm  v3.5.2
+36 error path /tmp/npm-1047-1d1a34a2/unpack-a56fdf27/package.json
+37 error code ENOENT
+38 error errno -2
+39 error syscall open
+40 error enoent ENOENT: no such file or directory, open '/tmp/npm-1047-1d1a34a2/unpack-a56fdf27/package.json'
+41 error enoent ENOENT: no such file or directory, open '/tmp/npm-1047-1d1a34a2/unpack-a56fdf27/package.json'
+41 error enoent This is most likely not a problem with npm itself
+41 error enoent and is related to npm not being able to find a file.
+42 verbose exit [ -2, true ]
