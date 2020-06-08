@@ -57,6 +57,9 @@ class AuthModel extends CI_Model {
      * Insert user data
      */
     public function insert($data){
+        if($data['role'] == 'administrator' || $data['role'] == 'guru'){
+            $data['status'] = 1;
+        }
         //add created and modified date if not exists
         if(!array_key_exists("create_time", $data)){
             $data['create_time'] = date("Y-m-d H:i:s");
@@ -82,7 +85,7 @@ class AuthModel extends CI_Model {
         }
         
         //update user data in users table
-        $update = $this->db->update($this->userTbl, $data, array('id'=>$id));
+        $update = $this->db->update($this->userTbl, $data, array('idUsers'=>$id));
         
         //return the status
         return $update?true:false;
