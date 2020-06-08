@@ -14,7 +14,9 @@
 		"php": ">=5.3.7",
         "illuminate/database": "5.0.28",
         "illuminate/events": "5.0.28",
-		"vlucas/phpdotenv": "^3.6"
+		"vlucas/phpdotenv": "^3.6",
+		"rakit/validation": "^1.2",
+		"chriskacerguis/codeigniter-restserver": "^3.1"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

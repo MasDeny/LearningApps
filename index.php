@@ -313,5 +313,4 @@ switch (ENVIRONMENT)
  * And away we go...
  */
 
-require APPPATH."/third_party/vendor/autoload.php";
 require_once BASEPATH.'core/CodeIgniter.php';
