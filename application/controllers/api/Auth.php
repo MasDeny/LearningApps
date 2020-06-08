@@ -144,48 +144,45 @@ class Auth extends REST_Controller
         );
         $result = $this->authModel->getRows($con);
 
-        return $this->response($id);
-
-        // // Get the post data
-        // $username = strip_tags($this->put('username'));
-        // $email = strip_tags($this->put('email'));
-        // $password = $this->put('password');
-        // $role = strip_tags($this->put('role'));
-        // $status = strip_tags($this->put('status'));
+        // Get the post data
+        $username = strip_tags($this->put('username'));
+        $email = strip_tags($this->put('email'));
+        $password = $this->put('password');
+        $role = strip_tags($this->put('role'));
+        $status = strip_tags($this->put('status'));
         
-        // // Validate the post data
-        // if(!empty($id) && (!empty($first_name) || !empty($last_name) || !empty($email) || !empty($password) || !empty($phone))){
-        //     // Update user's account data
-        //     $userData = array();
-        //     if(!empty($username)){
-        //         $userData['username'] = $username;
-        //     }
-        //     if(!empty($email)){
-        //         $userData['email'] = $email;
-        //     }
-        //     if(!empty($password)){
-        //         $userData['password'] = md5($password);
-        //     }
-        //     if(!empty($phone)){
-        //         $userData['phone'] = $role;
-        //     }
-        //     $update = $this->user->update($userData, $id);
+        // Validate the post data
+        if(!empty($id) && (!empty($username) || !empty($status) || !empty($email) || !empty($password) || !empty($role))){
+            // Update user's account data
+            $userData = array();
+
+            !empty($username) ? $userData['username'] = $username : $userData['username'] = $result['Username'] ;
+
+            !empty($email) ? $userData['password'] = md5($password) : $userData['status'] = $result['Email'];
+
+            !empty($email) ? $userData['email'] = $email : $userData['email'] = $result['Email'];
+
+            !empty($role) ? $userData['role'] = $role : $userData['role'] = $result['Role'];
+
+            !empty($status) ? $userData['status'] = $userData['status'] = $status : $userData['status'] = $result['Status'] ;
+
+            $update = $this->authModel->update($userData, $id);
             
-        //     // Check if the user data is updated
-        //     if($update){
-        //         // Set the response and exit
-        //         $this->response([
-        //             'status' => TRUE,
-        //             'message' => 'The user info has been updated successfully.'
-        //         ], REST_Controller::HTTP_OK);
-        //     }else{
-        //         // Set the response and exit
-        //         $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
-        //     }
-        // }else{
-        //     // Set the response and exit
-        //     $this->response("Provide at least one user info to update.", REST_Controller::HTTP_BAD_REQUEST);
-        // }
+            // Check if the user data is updated
+            if($update){
+                // Set the response and exit
+                $this->response([
+                    'status' => TRUE,
+                    'message' => 'The user info has been updated successfully.'
+                ], REST_Controller::HTTP_OK);
+            }else{
+                // Set the response and exit
+                $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
+            }
+        }else{
+            // Set the response and exit
+            $this->response("Provide at least one user info to update.", REST_Controller::HTTP_BAD_REQUEST);
+        }
     }
 }
 
