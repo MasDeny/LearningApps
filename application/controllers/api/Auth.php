@@ -17,6 +17,31 @@ class Auth extends REST_Controller
         $this->load->model('authModel');
     }
 
+    // check password process
+    private function check_email($email)
+    {
+        $con['returnType'] = 'count';
+        $con['conditions'] = array(
+            'email' => $email,
+        );
+        $userCount = $this->authModel->getRows($con);
+
+        if ($userCount > 0) {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Email duplicate, please use another email'
+            ], REST_Controller::HTTP_FORBIDDEN);
+        }
+    }
+
+    public function index_get()
+    {
+        $this->response( [
+            'status' => true,
+            'message' => 'API Server For E-Learning'
+        ], REST_Controller::HTTP_FORBIDDEN );
+    }
+
     // login process 
     public function login_post()
     {
@@ -41,9 +66,9 @@ class Auth extends REST_Controller
                 'username'      => $result['Username'],
                 'email'         => $result['Email'],
                 'role'          => $result['Role'],
-                'status'        => $result['Status']==0?'deactivate':'active',
+                'status'        => $result['Status'] == 0 ? 'deactivate' : 'active',
                 'create_time'   => $result['create_time'],
-                'update_time'   => $result['update_time'] 
+                'update_time'   => $result['update_time']
             );
 
             if ($result) {
@@ -72,18 +97,7 @@ class Auth extends REST_Controller
 
         // check duplicate email on database
         $email = strip_tags($this->post('email'));
-        $con['returnType'] = 'count';
-        $con['conditions'] = array(
-            'email' => $email,
-        );
-        $userCount = $this->authModel->getRows($con);
-
-        if ($userCount > 0) {
-            $this->response([
-                'status' => FALSE,
-                'message' => 'Email duplicate, please use another email'
-            ], REST_Controller::HTTP_FORBIDDEN);
-        }
+        $this->check_email($email);
 
         $validator = new Validator;
 
@@ -137,12 +151,16 @@ class Auth extends REST_Controller
         // put method harus menggunakan x-www-form-urlencode
 
         $id = $this->put('id');
-        
+
         $con['returnType'] = 'single';
-            $con['conditions'] = array(
-                'idUsers' => $id
+        $con['conditions'] = array(
+            'idUsers' => $id
         );
         $result = $this->authModel->getRows($con);
+
+        // check duplicate email
+        $email = strip_tags($this->post('email'));
+        $this->check_email($email);
 
         // Get the post data
         $username = strip_tags($this->put('username'));
@@ -150,40 +168,104 @@ class Auth extends REST_Controller
         $password = $this->put('password');
         $role = strip_tags($this->put('role'));
         $status = strip_tags($this->put('status'));
-        
+
         // Validate the post data
-        if(!empty($id) && (!empty($username) || !empty($status) || !empty($email) || !empty($password) || !empty($role))){
+        if (!empty($id) && (!empty($username) || !empty($status) || !empty($email) || !empty($password) || !empty($role))) {
             // Update user's account data
             $userData = array();
 
-            !empty($username) ? $userData['username'] = $username : $userData['username'] = $result['Username'] ;
+            !empty($username) ? $userData['username'] = $username : $userData['username'] = $result['Username'];
 
-            !empty($email) ? $userData['password'] = md5($password) : $userData['status'] = $result['Email'];
+            !empty($password) ? $userData['password'] = md5($password) : $userData['password'] = $result['Password'];
 
             !empty($email) ? $userData['email'] = $email : $userData['email'] = $result['Email'];
 
             !empty($role) ? $userData['role'] = $role : $userData['role'] = $result['Role'];
 
-            !empty($status) ? $userData['status'] = $userData['status'] = $status : $userData['status'] = $result['Status'] ;
+            !empty($status) ? $userData['status'] = $status : $userData['status'] = $result['Status'];
 
             $update = $this->authModel->update($userData, $id);
-            
+
             // Check if the user data is updated
-            if($update){
+            if ($update) {
                 // Set the response and exit
                 $this->response([
                     'status' => TRUE,
                     'message' => 'The user info has been updated successfully.'
                 ], REST_Controller::HTTP_OK);
-            }else{
+            } else {
                 // Set the response and exit
                 $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
             }
-        }else{
+        } else {
             // Set the response and exit
             $this->response("Provide at least one user info to update.", REST_Controller::HTTP_BAD_REQUEST);
         }
     }
+
+    // change password
+    public function change_put()
+    {
+    
+        $email = strip_tags($this->put('email'));
+        $oldPassword = $this->put('old_password');
+        // Check if any user exists with the given credentials
+        $con['returnType'] = 'single';
+        $con['conditions'] = array(
+            'email' => $email,
+            'password' => md5($oldPassword),
+            'status' => 1
+        );
+        $result = $this->authModel->getRows($con);
+
+        if (!$result > 0) {
+            // handling errors
+            $this->response([
+                'status' => FALSE,
+                'message' => 'wrong old password'
+            ], REST_Controller::HTTP_FORBIDDEN);
+        }
+
+        $id = $result['idUsers'];
+
+        $validator = new Validator;
+        $data = $validator->make($this->put(), [
+            'new_password'              => 'required|min:6',
+            'password_confirm'          => 'required|same:new_password'
+        ]);
+
+        // then validate
+        $data->validate();
+
+        if ($data->fails()) {
+
+            // handling errors
+            $errors = $data->errors();
+            $this->response([
+                'status' => FALSE,
+                'message' => $errors->firstOfAll()
+            ], REST_Controller::HTTP_FORBIDDEN);
+        } else {
+            $newPassword = $this->put('new_password');
+            $userData = array();
+            $userData['password'] = md5($newPassword);
+            
+            $update = $this->authModel->update($userData, $id);
+
+            // Check if the user data is updated
+            if ($update) {
+                // Set the response and exit
+                $this->response([
+                    'status' => TRUE,
+                    'message' => 'Password has been updated successfully.'
+                ], REST_Controller::HTTP_OK);
+            } else {
+                // Set the response and exit
+                $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
+            }
+        }
+    }
+
 }
 
 /* End of file Controllername.php */
