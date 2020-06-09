@@ -57,7 +57,7 @@ class Auth extends REST_Controller
             $con['conditions'] = array(
                 'email' => $email,
                 'password' => md5($password),
-                'status' => 1
+                // 'status' => 1
             );
             $result = $this->authModel->getRows($con);
 
@@ -213,8 +213,7 @@ class Auth extends REST_Controller
         $con['returnType'] = 'single';
         $con['conditions'] = array(
             'email' => $email,
-            'password' => md5($oldPassword),
-            'status' => 1
+            'password' => md5($oldPassword)
         );
         $result = $this->authModel->getRows($con);
 
@@ -249,6 +248,7 @@ class Auth extends REST_Controller
             $newPassword = $this->put('new_password');
             $userData = array();
             $userData['password'] = md5($newPassword);
+            $userData['status'] = 1;
             
             $update = $this->authModel->update($userData, $id);
 
