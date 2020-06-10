@@ -27,19 +27,19 @@ class Auth extends REST_Controller
         $userCount = $this->authModel->getRows($con);
 
         if ($userCount > 0) {
-            $this->response([
+            return $this->response(['result' => array(
                 'status' => FALSE,
                 'message' => 'Email duplicate, please use another email'
-            ], REST_Controller::HTTP_FORBIDDEN);
+            )], REST_Controller::HTTP_FORBIDDEN);
         }
     }
 
     public function index_get()
     {
-        $this->response( [
+        $this->response(['result' => array(
             'status' => true,
             'message' => 'API Server For E-Learning'
-        ], REST_Controller::HTTP_FORBIDDEN );
+        )], REST_Controller::HTTP_FORBIDDEN);
     }
 
     // login process 
@@ -61,31 +61,50 @@ class Auth extends REST_Controller
             );
             $result = $this->authModel->getRows($con);
 
+            // check multiple device
+            if ($result['Device'] == 1) {
+                $this->response(['result' => array(
+                    'status' => true,
+                    'message' => 'Device has been login another device, please logout first'
+                )], REST_Controller::HTTP_FORBIDDEN);
+            }
+            
+            $device['id'] = (int) $result['idUsers'];
+            $data['device'] = 1;
+            $devicesUpdate = $this->authModel->device($data, $device);
+
+
             $finalResult = array(
-                'id'            => $result['idUsers'],
+                'id'            => (int) $result['idUsers'],
                 'username'      => $result['Username'],
                 'email'         => $result['Email'],
                 'role'          => $result['Role'],
+                'device'        => $devicesUpdate['Device'],
                 'status'        => $result['Status'] == 0 ? 'deactivate' : 'active',
                 'create_time'   => $result['create_time'],
                 'update_time'   => $result['update_time']
             );
 
+
             if ($result) {
                 // Set the response and exit
-                $this->response([
+                $this->response(['result' => array(
                     'status' => TRUE,
                     'message' => 'User login successful.',
-                    'result' => $finalResult
-                ], REST_Controller::HTTP_OK);
+                    'data' => $finalResult
+                )], REST_Controller::HTTP_OK);
             } else {
                 // Set the response and exit
                 //BAD_REQUEST (400) being the HTTP response code
-                $this->response("Wrong email or password.", REST_Controller::HTTP_BAD_REQUEST);
+                $this->response(['result' => array(
+                    'status' => false,
+                    'message' => 'Wrong email or password')], REST_Controller::HTTP_BAD_REQUEST);
             }
         } else {
             // Set the response and exit
-            $this->response("Provide email and password.", REST_Controller::HTTP_BAD_REQUEST);
+            $this->response(['result' => array(
+                'status' => false,
+                'message' => 'Provide email and password')], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
 
@@ -97,6 +116,7 @@ class Auth extends REST_Controller
 
         // check duplicate email on database
         $email = strip_tags($this->post('email'));
+
         $this->check_email($email);
 
         $validator = new Validator;
@@ -117,10 +137,10 @@ class Auth extends REST_Controller
 
             // handling errors
             $errors = $data->errors();
-            $this->response([
+            $this->response(['result' => array(
                 'status' => FALSE,
                 'message' => $errors->firstOfAll()
-            ], REST_Controller::HTTP_FORBIDDEN);
+            )], REST_Controller::HTTP_FORBIDDEN);
         } else {
 
             $userData = array(
@@ -135,13 +155,16 @@ class Auth extends REST_Controller
             // Check if the user data is inserted
             if ($insert) {
                 // Set the response and exit
-                $this->response([
+                $this->response(['result' => array(
                     'status' => TRUE,
                     'message' => 'The user has been added successfully.'
-                ], REST_Controller::HTTP_CREATED);
+                )], REST_Controller::HTTP_CREATED);
             } else {
                 // Set the response and exit
-                $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
+                $this->response(['result' => array(
+                    'status' => TRUE,
+                    'message' => 'Some problems occurred, please try again.'
+                )], REST_Controller::HTTP_BAD_REQUEST);
             }
         }
     }
@@ -158,9 +181,6 @@ class Auth extends REST_Controller
         );
         $result = $this->authModel->getRows($con);
 
-        // check duplicate email
-        $email = strip_tags($this->post('email'));
-        $this->check_email($email);
 
         // Get the post data
         $username = strip_tags($this->put('username'));
@@ -170,6 +190,8 @@ class Auth extends REST_Controller
         $status = strip_tags($this->put('status'));
 
         // Validate the post data
+        $this->check_email($email);
+
         if (!empty($id) && (!empty($username) || !empty($status) || !empty($email) || !empty($password) || !empty($role))) {
             // Update user's account data
             $userData = array();
@@ -189,10 +211,10 @@ class Auth extends REST_Controller
             // Check if the user data is updated
             if ($update) {
                 // Set the response and exit
-                $this->response([
+                $this->response(['result' => array(
                     'status' => TRUE,
                     'message' => 'The user info has been updated successfully.'
-                ], REST_Controller::HTTP_OK);
+                )], REST_Controller::HTTP_OK);
             } else {
                 // Set the response and exit
                 $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
@@ -206,7 +228,7 @@ class Auth extends REST_Controller
     // change password
     public function change_put()
     {
-    
+
         $email = strip_tags($this->put('email'));
         $oldPassword = $this->put('old_password');
         // Check if any user exists with the given credentials
@@ -219,10 +241,10 @@ class Auth extends REST_Controller
 
         if (!$result > 0) {
             // handling errors
-            $this->response([
+            $this->response(['result' => array(
                 'status' => FALSE,
                 'message' => 'wrong old password'
-            ], REST_Controller::HTTP_FORBIDDEN);
+            )], REST_Controller::HTTP_FORBIDDEN);
         }
 
         $id = $result['idUsers'];
@@ -240,32 +262,72 @@ class Auth extends REST_Controller
 
             // handling errors
             $errors = $data->errors();
-            $this->response([
+            $this->response(['result' => array(
                 'status' => FALSE,
                 'message' => $errors->firstOfAll()
-            ], REST_Controller::HTTP_FORBIDDEN);
+            )], REST_Controller::HTTP_FORBIDDEN);
         } else {
             $newPassword = $this->put('new_password');
             $userData = array();
             $userData['password'] = md5($newPassword);
             $userData['status'] = 1;
-            
+
             $update = $this->authModel->update($userData, $id);
 
             // Check if the user data is updated
             if ($update) {
                 // Set the response and exit
-                $this->response([
+                $this->response(['result' => array(
                     'status' => TRUE,
                     'message' => 'Password has been updated successfully.'
-                ], REST_Controller::HTTP_OK);
+                )], REST_Controller::HTTP_OK);
             } else {
                 // Set the response and exit
-                $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
+                $this->response(['result' => array(
+                    'status' => TRUE,
+                    'message' => 'Some problems occurred, please try again.'
+                )], REST_Controller::HTTP_BAD_REQUEST);
             }
         }
     }
 
+    public function logout_post()
+    {
+        // Get the post data
+        $email = strip_tags($this->post('email'));
+        $password = $this->post('password');
+
+        // Validate the post data
+        if (!empty($email) && !empty($password)) {
+
+            // Check if any user exists with the given credentials
+            $con['returnType'] = 'single';
+            $con['conditions'] = array(
+                'email' => $email,
+                'password' => md5($password),
+                // 'status' => 1
+            );
+            $result = $this->authModel->getRows($con);
+            // check multiple device
+            $device['returnType'] = 'login';
+            $device['id'] = (int) $result['idUsers'];
+            $data['device'] = 0;
+            $devicesUpdate = $this->authModel->device($data, $device);
+
+            if ($devicesUpdate['Device'] == 0) {
+                $this->response(['result' => array(
+                    'status' => true,
+                    'message' => 'Device has been logout'
+                )], REST_Controller::HTTP_OK);
+            }
+        } else {
+            // Set the response and exit
+            $this->response(['result' => array(
+                'status' => true,
+                'message' => 'Provide email and password.'
+            )], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
 }
 
 /* End of file Controllername.php */
