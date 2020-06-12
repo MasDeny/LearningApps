@@ -96,11 +96,17 @@ class Auth extends REST_Controller
             } else {
                 // Set the response and exit
                 //BAD_REQUEST (400) being the HTTP response code
-                $this->response("Wrong email or password.", REST_Controller::HTTP_BAD_REQUEST);
+                $this->response([
+                    'status' => FALSE,
+                    'message' => 'Wrong email or password.'
+                ], REST_Controller::HTTP_BAD_REQUEST);
             }
         } else {
             // Set the response and exit
-            $this->response("Provide email and password.", REST_Controller::HTTP_BAD_REQUEST);
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Provide email and password.'
+            ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
 
@@ -157,7 +163,10 @@ class Auth extends REST_Controller
                 ], REST_Controller::HTTP_CREATED);
             } else {
                 // Set the response and exit
-                $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
+                $this->response([
+                    'status' => TRUE,
+                    'message' => 'Some problems occurred, please try again.'
+                ], REST_Controller::HTTP_BAD_REQUEST);
             }
         }
     }
@@ -210,11 +219,17 @@ class Auth extends REST_Controller
                 ], REST_Controller::HTTP_OK);
             } else {
                 // Set the response and exit
-                $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
+                $this->response([
+                    'status' => TRUE,
+                    'message' => 'Some problems occurred, please try again.'
+                ], REST_Controller::HTTP_BAD_REQUEST);
             }
         } else {
             // Set the response and exit
-            $this->response("Provide at least one user info to update.", REST_Controller::HTTP_BAD_REQUEST);
+            $this->response([
+                'status' => TRUE,
+                'message' => 'Provide at least one user info to update.'
+            ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
 
@@ -276,7 +291,11 @@ class Auth extends REST_Controller
                 ], REST_Controller::HTTP_OK);
             } else {
                 // Set the response and exit
-                $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
+
+                $this->response([
+                    'status' => TRUE,
+                    'message' => 'Some problems occurred, please try again.'
+                ], REST_Controller::HTTP_BAD_REQUEST);
             }
         }
     }
@@ -312,7 +331,10 @@ class Auth extends REST_Controller
             }
         } else {
             // Set the response and exit
-            $this->response("Provide email and password.", REST_Controller::HTTP_BAD_REQUEST);
+            $this->response([
+                'status' => true,
+                'message' => 'Provide email and password.'
+            ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
 }
