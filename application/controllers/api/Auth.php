@@ -73,20 +73,21 @@ class Auth extends REST_Controller
             $data['device'] = 1;
             $devicesUpdate = $this->authModel->device($data, $device);
 
-
-            $finalResult = array(
-                'id'            => (int) $result['idUsers'],
-                'username'      => $result['Username'],
-                'email'         => $result['Email'],
-                'role'          => $result['Role'],
-                'device'        => (int)$devicesUpdate['Device'],
-                'status'        => $result['Status'] == 0 ? 'deactivate' : 'active',
-                'create_time'   => $result['create_time'],
-                'update_time'   => $result['update_time']
-            );
-
-
+            // validasi login
             if ($result) {
+
+                //strutured data
+                $finalResult = array(
+                    'id'            => (int) $result['idUsers'],
+                    'username'      => $result['Username'],
+                    'email'         => $result['Email'],
+                    'role'          => $result['Role'],
+                    'device'        => (int)$devicesUpdate['Device'],
+                    'status'        => $result['Status'] == 0 ? 'deactivate' : 'active',
+                    'create_time'   => $result['create_time'],
+                    'update_time'   => $result['update_time']
+                );
+                
                 // Set the response and exit
                 $this->response([
                     'status' => TRUE,
