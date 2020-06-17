@@ -39,7 +39,7 @@ $(document).ready(function () {
 
                         Swal.fire({
                             type: 'success',
-                            title: 'Login Berhasil!',
+                            title: response.message,
                             text: 'Anda akan di arahkan dalam 3 Detik',
                             timer: 3000,
                             showCancelButton: false,
@@ -53,7 +53,7 @@ $(document).ready(function () {
 
                         Swal.fire({
                             type: 'error',
-                            title: 'Login Gagal!',
+                            title: response.message,
                             text: 'silahkan coba lagi!'
                         });
 

@@ -55,14 +55,14 @@ class Admin extends CI_Controller {
             header('Content-Type: application/json');
             echo json_encode([
                 'status' => TRUE,
-                'message' => 'User login successful.',
+                'message' => 'Login Berhasil',
                 'result' => $finalResult
             ]);
         } else {
             header('Content-Type: application/json');
             echo json_encode([
                 'status' => FALSE,
-                'message' => 'Wrong email or password.'
+                'message' => 'Email atau password salah'
             ]);
         }
     }
