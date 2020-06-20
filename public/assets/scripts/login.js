@@ -1,9 +1,12 @@
 $(document).ready(function () {
 
-    $("#loginBtn").click(function () {
+    
 
+    $("#loginBtn").click(function () {
+        
         var email = $("#email").val();
         var password = $("#password").val();
+        var url = $("#url").val();
 
         if (email.length == "") {
 
@@ -46,7 +49,7 @@ $(document).ready(function () {
                             showConfirmButton: false
                         })
                             .then(function () {
-                                window.location.href = "dashboard/";
+                                window.location.href = url+"dashboard";
                             });
 
                     } else {

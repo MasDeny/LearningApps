@@ -83,7 +83,7 @@
                 </div>
             </div>
         </div>
-
+        <input type="hidden" id="url" value="<?= base_url(); ?>"></input>
         <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/login.js" hidden></script>
 </body>
 
