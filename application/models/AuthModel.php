@@ -107,6 +107,13 @@ class AuthModel extends CI_Model
         $result = $this->getRows($params);
         return $update ? $result : false;
     }
+
+    public function delete($id){
+        //update user from users table
+        $delete = $this->db->delete('idUsers',array('id'=>$id));
+        //return the status
+        return $delete?true:false;
+    }
 }
 
 /* End of file AuthModel.php */

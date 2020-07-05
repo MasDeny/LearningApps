@@ -1,5 +1,5 @@
 <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-<div class="app-header header-shadow bg-happy-fisher header-text-dark">
+<div class="app-header header-shadow bg-vicious-stance header-text-light">
     <div class="app-header__logo">
         <div class="logo-src"></div>
         <div class="header__pane ml-auto">
@@ -56,7 +56,7 @@
                                     <button type="button" tabindex="0" class="dropdown-item">Perbaharui Profil</button>
                                     <button type="button" tabindex="0" class="dropdown-item">Ganti Password</button>
                                     <div tabindex="-1" class="dropdown-divider"></div>
-                                    <button type="button" tabindex="0" class="dropdown-item text-danger">Keluar Aplikasi</button>
+                                    <a type="button" tabindex="0" href="<?php echo base_url()?>admin/logout" class="dropdown-item text-danger">Keluar Aplikasi</a>
                                 </div>
                             </div>
                         </div>

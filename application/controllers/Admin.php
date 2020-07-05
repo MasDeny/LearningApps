@@ -11,10 +11,23 @@ class Admin extends CI_Controller
         parent::__construct();
         // Load the user model
         $this->load->model('authModel');
+        $this->load->helper('login');
+    }
+
+    public function index()
+    {
+        echo json_encode(true);
     }
 
     public function login()
     {
+        if (is_logged_in()) {
+            if ($this->session->userdata('user_data')['role'] == 'administrator') {
+                redirect('dashboard/admin_dash');
+            }else{
+                redirect('dashboard');
+            }
+        }
         $this->load->view('login');
     }
 
@@ -44,6 +57,14 @@ class Admin extends CI_Controller
 
         if ($result) {
 
+            if ($result['Role'] == 'murid') {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status' => FALSE,
+                    'message' => 'Anda tidak di ijinkan untuk mengakses halaman dashboard'
+                ]);
+                return true;
+            }
             //strutured data
             $finalResult = array(
                 'id'            => (int) $result['idUsers'],
