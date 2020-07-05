@@ -156,7 +156,7 @@ class Profile extends REST_Controller {
     {
         $role = $this->post('role') == 'murid' ? "students/" : "staff/";
         $dir = "upload/profile/" . $role;
-        $name = str_replace(' ', '_', $this->post('username') . "-" . $_FILES["file"]['name']); //. date.now());
+        $name = date("d-m-Y") . "-" . str_replace(' ', '_', $this->post('username') . "-" . $_FILES["file"]['name']);
         $config['upload_path'] = $dir;
         $config['allowed_types'] = 'jpg|png|jpeg'; //type yang dapat diakses bisa anda sesuaikan
         $config['max_size'] = 1024;
@@ -172,14 +172,15 @@ class Profile extends REST_Controller {
             return array('status' => TRUE, 'message' => $dir . $name);
         } else {
 
-            return array('status' => FALSE, 'message' => "Gagal Upload Silahkan Ulangi");
+            unlink($dir . $name);
+            return array('status' => FALSE, 'message' => "Gagal Upload, pastikan file sebesar 1MB dan berformat jpg|png|jpeg");
         }
     }
 
     public function update_post()
     {
         // put method harus menggunakan x-www-form-urlencode
-
+        
         $id = $this->post('id');
         $role = $this->post('role') == 'murid' ? "students/" : "staff/";
         $dir = "upload/profile/" . $role;
@@ -188,22 +189,23 @@ class Profile extends REST_Controller {
 
         $con['returnType'] = 'single';
         $con['id'] = $id;
+
         
         $this->post('role')=='murid' ? $result = $this->studentModel->getRows($con) : $result = $this->teacherModel->getRows($con);
-
+        
         $photo = $result['profilePhoto'];
 
         if ($result['profilePhoto'] != $dir . $_FILES["file"]['name']) {
             $data = $this->do_upload();
             if (!$data['status']) {
-                @unlink($_FILES[$data['message']]);
+                unlink($_FILES[$data['message']]);
                 // Set the response and exit
                 $this->response([
                     'status' => $data['status'],
                     'message' => $data['message']
                 ], REST_Controller::HTTP_FORBIDDEN);
             }
-            // @unlink($result['profilePhoto']);
+            unlink($photo);
             $photo = $data['message'];
         }
 
@@ -259,6 +261,14 @@ class Profile extends REST_Controller {
 
     private function profile_validate($validator)
     {
+
+        $validator->setMessages([
+            'required' => ':attribute harap untuk diisi',
+            'uploaded_file' => 'pastikan file sebesar 1MB dan berformat jpg|png|jpeg',
+            'numeric' => 'Input harus berupa angka'
+            // etc
+        ]);
+        
         $data = $validator->make($this->post(), [
             // validasi profile
             'id'        => 'required|min:3',
@@ -275,7 +285,7 @@ class Profile extends REST_Controller {
         ]);
 
         $photo = $validator->make($_FILES, [
-            'file'      => 'required|uploaded_file|max:2M|mimes:jpg,jpeg,png',
+            'file'      => 'required|uploaded_file|max:1M|mimes:jpg,jpeg,png',
         ]);
 
         // then validate
