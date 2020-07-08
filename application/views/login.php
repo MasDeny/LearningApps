@@ -58,7 +58,7 @@
                 <div class="col-md-4 login-sec">
                     <h2 class="text-center up">Masuk Aplikasi</h2>
                     <h2 class="text-center down">E-Learning</h2>
-                    <form class="login-form">
+                    <form class="login-form" url="<?php echo base_url() ?>">
                         <div class="form-group">
                             <label for="exampleInputEmail1" class="text-uppercase">Email</label>
                             <input type="email" class="form-control" placeholder="" id="email">
@@ -74,16 +74,14 @@
                                 <small>Ingat Saya</small>
                             </label>
                         </div>
-
-                    </form>
                     <div class="form-group">
                         <button type="submit" class="btn btn-login btn-lg btn-block" id="loginBtn">Masuk</button>
                     </div>
+                    </form>
                     <!-- <div class="copy-text">Created with <i class="fa fa-heart"></i> by Grafreez</div> -->
                 </div>
             </div>
         </div>
-        <input type="hidden" id="url" value="<?= base_url(); ?>"></input>
         <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/login.js" hidden></script>
 </body>
 
