@@ -65,10 +65,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="position-relative form-check">
-						<input name="check" id="checkDefault" type="checkbox" class="form-check-input" data-toggle="tooltip" data-placement="top" title="Isi data pada form profile secara default">
-						<label for="exampleCheck" class="form-check-label">Isi data profile secara default oleh sistem</label>
-					</div>
 					<div class="data-profile">
 						<div class="divider"></div>
 						<h5 class="card-title">Profile Pengguna</h5>

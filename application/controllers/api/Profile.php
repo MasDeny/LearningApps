@@ -15,6 +15,7 @@ class Profile extends REST_Controller {
         $this->load->model('authModel');
         $this->load->model('teacherModel');
         $this->load->model('studentModel');
+        $this->load->model('authModel');
         $this->load->library('upload');
 
     }
@@ -75,10 +76,8 @@ class Profile extends REST_Controller {
             ], REST_Controller::HTTP_FORBIDDEN);
         } else {
 
-            if ($this->post('check') != 'on') {
-
-                $this->profile_validate($validator);
-            }
+            $this->profile_validate($validator);
+            $data = $this->do_upload();
 
             $userData = array(
                 'username' => strip_tags($this->post('username')),
@@ -88,7 +87,6 @@ class Profile extends REST_Controller {
             );
 
             
-            $data = $this->do_upload();
             
             if ($data['status']) {
                 $insert = $this->authModel->insert($userData);
@@ -133,12 +131,14 @@ class Profile extends REST_Controller {
 
             $student = array(
                 'idStudents' => strip_tags($this->post('id')),
-                'class' => strip_tags($this->post('class')),
+                'class' => strip_tags($this->post('class'))
             );
-            $data = array_merge($student, $thirdData, $profileData);
 
+            $data = array_merge($student, $thirdData, $profileData);
             $insert = $this->studentModel->insert($data);
+
             return $insert;
+
         } else {
             $teacher = array(
                 'idTeachers' => strip_tags($this->post('id')),
@@ -146,8 +146,8 @@ class Profile extends REST_Controller {
             );
 
             $data = array_merge($teacher, $thirdData, $profileData);
-
             $insert = $this->teacherModel->insert($data);
+            
             return $insert;
         }
     }
@@ -221,9 +221,10 @@ class Profile extends REST_Controller {
                     'class'         => strip_tags($this->post('class')),
                     'profilePhoto'  => $photo
                 );
+
                 $data = array_merge($student, $profileData);
-    
                 $update = $this->studentModel->update($data, $id);
+
             } else {
                 $teacher = array(
                     'idTeachers' => strip_tags($this->post('id')),
@@ -232,8 +233,8 @@ class Profile extends REST_Controller {
                 );
     
                 $data = array_merge($teacher, $profileData);
-    
                 $update = $this->teacherModel->update($data, $id);
+
             }
 
             // Check if the user data is updated
@@ -321,6 +322,23 @@ class Profile extends REST_Controller {
         );
 
         return $profileData;
+    }
+    
+    public function show_get($role = null) 
+    {
+        $id = (int)$this->input->get('id');
+        
+        $con['returnType'] = 'count';
+            $con['conditions'] = array(
+                'role' => $role,
+                // 'status' => 1
+            );
+        $result = $this->authModel->getRows($con);
+        
+        $this->response([
+            'status' => TRUE,
+            'message' => $result
+        ], REST_Controller::HTTP_OK);
     }
 
 }
