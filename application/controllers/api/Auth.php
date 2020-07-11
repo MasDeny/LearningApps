@@ -83,7 +83,7 @@ class Auth extends REST_Controller
                     'gender'            => $profile['gender'],
                     'religion'          => $profile['religion'],
                     'address'           => json_decode($profile['address']),
-                    'phone'             => (int) $profile['phone'],
+                    'phone'             => $profile['phone'],
                     'profilePhoto'      => base_url().$profile['profilePhoto'],
                     'device'            => (int) $devicesUpdate['Device'],
                     'status'            => $result['Status'] == 0 ? 'deactivate' : 'active',

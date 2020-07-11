@@ -1,12 +1,13 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 use Rakit\Validation\Validator;
 
 require APPPATH . '/libraries/REST_Controller.php';
 
-class Profile extends REST_Controller {
+class Profile extends REST_Controller
+{
 
     public function __construct()
     {
@@ -15,9 +16,7 @@ class Profile extends REST_Controller {
         $this->load->model('authModel');
         $this->load->model('teacherModel');
         $this->load->model('studentModel');
-        $this->load->model('authModel');
         $this->load->library('upload');
-
     }
 
     // check password process
@@ -86,8 +85,8 @@ class Profile extends REST_Controller {
                 'role' => strip_tags($this->post('role')),
             );
 
-            
-            
+
+
             if ($data['status']) {
                 $insert = $this->authModel->insert($userData);
                 $profile = $this->add_profile($insert, $data['message']);
@@ -138,7 +137,6 @@ class Profile extends REST_Controller {
             $insert = $this->studentModel->insert($data);
 
             return $insert;
-
         } else {
             $teacher = array(
                 'idTeachers' => strip_tags($this->post('id')),
@@ -147,7 +145,7 @@ class Profile extends REST_Controller {
 
             $data = array_merge($teacher, $thirdData, $profileData);
             $insert = $this->teacherModel->insert($data);
-            
+
             return $insert;
         }
     }
@@ -158,7 +156,7 @@ class Profile extends REST_Controller {
         $dir = "upload/profile/" . $role;
         $name = date("d-m-Y") . "-" . str_replace(' ', '_', $this->post('username') . "-" . $_FILES["file"]['name']);
         $config['upload_path'] = $dir;
-        $config['allowed_types'] = 'jpg|png|jpeg'; //type yang dapat diakses bisa anda sesuaikan
+        $config['allowed_types'] = 'jpg|png|jpeg|bmp'; //type yang dapat diakses bisa anda sesuaikan
         $config['max_size'] = 1024;
         $config['file_name'] = $name;
 
@@ -180,7 +178,7 @@ class Profile extends REST_Controller {
     public function update_post()
     {
         // put method harus menggunakan x-www-form-urlencode
-        
+
         $id = $this->post('id');
         $role = $this->post('role') == 'murid' ? "students/" : "staff/";
         $dir = "upload/profile/" . $role;
@@ -190,9 +188,9 @@ class Profile extends REST_Controller {
         $con['returnType'] = 'single';
         $con['id'] = $id;
 
-        
-        $this->post('role')=='murid' ? $result = $this->studentModel->getRows($con) : $result = $this->teacherModel->getRows($con);
-        
+
+        $this->post('role') == 'murid' ? $result = $this->studentModel->getRows($con) : $result = $this->teacherModel->getRows($con);
+
         $photo = $result['profilePhoto'];
 
         if ($result['profilePhoto'] != $dir . $_FILES["file"]['name']) {
@@ -224,17 +222,15 @@ class Profile extends REST_Controller {
 
                 $data = array_merge($student, $profileData);
                 $update = $this->studentModel->update($data, $id);
-
             } else {
                 $teacher = array(
                     'idTeachers' => strip_tags($this->post('id')),
                     'position' => strip_tags($this->post('position')),
                     'profilePhoto'  => $photo
                 );
-    
+
                 $data = array_merge($teacher, $profileData);
                 $update = $this->teacherModel->update($data, $id);
-
             }
 
             // Check if the user data is updated
@@ -269,7 +265,7 @@ class Profile extends REST_Controller {
             'numeric' => 'Input harus berupa angka'
             // etc
         ]);
-        
+
         $data = $validator->make($this->post(), [
             // validasi profile
             'id'        => 'required|min:3',
@@ -286,7 +282,7 @@ class Profile extends REST_Controller {
         ]);
 
         $photo = $validator->make($_FILES, [
-            'file'      => 'required|uploaded_file|max:1M|mimes:jpg,jpeg,png',
+            'file'      => 'required|uploaded_file|max:1M|mimes:jpg,jpeg,png,bmp',
         ]);
 
         // then validate
@@ -298,7 +294,7 @@ class Profile extends REST_Controller {
             // handling errors
             $this->response([
                 'status' => FALSE,
-                'message' => $data->fails()?$data->errors()->firstOfAll():$photo->errors()->firstOfAll()
+                'message' => $data->fails() ? $data->errors()->firstOfAll() : $photo->errors()->firstOfAll()
             ], REST_Controller::HTTP_FORBIDDEN);
         }
     }
@@ -323,24 +319,57 @@ class Profile extends REST_Controller {
 
         return $profileData;
     }
-    
-    public function show_get($role = null) 
+
+    public function show_get($role = null)
     {
-        $id = (int)$this->input->get('id');
-        
-        $con['returnType'] = 'count';
-            $con['conditions'] = array(
-                'role' => $role,
-                // 'status' => 1
-            );
+        $id = (int) $this->input->get('id');
+
+        $con['returnType'] = 'getall';
+        $con['conditions'] = array(
+            'role' => $role,
+            // 'status' => 1
+        );
+
+        $role == 'murid'? $con['joinData'] = 'murid' : false;
+        $role == 'guru'? $con['joinData'] = 'guru' : false;
+
+        if ($id != null) $con['id'] = $id;
         $result = $this->authModel->getRows($con);
-        
+
+        // $con['returnType'] = 'single';
+        //         $con['conditions'] = array(
+        //             'idUsers' => $result['idUsers'],
+        //             // 'status' => 1
+        //         );
+
+        // $role == 'murid' ? $profile = $this->studentModel->getRows($con) : $profile = $this->teacherModel->getRows($con);
+
+
+        // $finalResult = array(
+        //     'id'                => (int) $result['idUsers'],
+        //     'username'          => $result['Username'],
+        //     'email'             => $result['Email'],
+        //     'role'              => $result['Role'],
+        //     'numberIdentity'    => $profile['idStudents'],
+        //     'fullname'          => $profile['name'],            'bornOfDate'        => $profile['bornOfDate'],
+        //     'gender'            => $profile['gender'],
+        //     'religion'          => $profile['religion'],
+        //     'address'           => json_decode($profile['address']),
+        //     'phone'             => (int) $profile['phone'],
+        //     'profilePhoto'      => base_url().$profile['profilePhoto'],
+        //     'device'            => (int) $result['Device'],
+        //     'status'            => $result['Status'] == 0 ? 'deactivate' : 'active',
+        //     'create_time'   => $result['create_time'],
+        //     'update_time'   => $result['update_time']
+        // );
+
+        // $role == 'murid' ? $finalResult['class'] = (int) $profile['class'] : $finalResult['position'] = $profile['position'] ;
+
         $this->response([
             'status' => TRUE,
             'message' => $result
         ], REST_Controller::HTTP_OK);
     }
-
 }
 
 /* End of file Profile.php */
