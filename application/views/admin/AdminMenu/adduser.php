@@ -46,6 +46,7 @@
 							<div class="position-relative form-group">
 								<label class="">Jenis User</label>
 								<select name="role" id="role" class="form-control" required>
+									<option disabled>-- Pilih Role User Yang Akan Dibuat --</option>
 									<option value="guru">Guru</option>
 									<option value="murid">Murid</option>
 									<option value="administrator">Administrator</option>
@@ -113,6 +114,7 @@
 								<div class="position-relative form-group">
 									<label class="">Jenis Kelamin</label>
 									<select name="gender" id="gender" class="form-control" required>
+										<option disabled>-- Pilih Jenis Kelamin --</option>
 										<option value="Laki-Laki">Laki-Laki</option>
 										<option value="Perempuan">Perempuan</option>
 									</select>
@@ -122,6 +124,7 @@
 								<div class="position-relative form-group">
 									<label class="">Agama</label>
 									<select name="religion" id="religion" class="form-control" required>
+										<option disabled>-- Pilih Agama yang dianut --</option>
 										<option value="Islam">Islam</option>
 										<option value="Kristen">Kristen</option>
 										<option value="Katolik">Katolik</option>
@@ -141,7 +144,7 @@
 						</div>
 						<div class="position-relative form-group">
 							<label for="exampleAddress" class="">Alamat</label>
-							<input name="address" id="address" placeholder="1234 Main St" type="text" class="form-control">
+							<input name="address" id="address" type="text" class="form-control">
 						</div>
 						<div class="form-row">
 							<div class="col-md-6">
@@ -168,7 +171,7 @@
 							<input name="file" id="file" type="file" class="form-control dropify" accept="image/*" data-max-file-size="1M" data-height="300" data-allowed-file-extensions="jpg jpeg png" data-errors-position="outside" multiple>
 						</div>
 					</div>
-					<button class="mt-4 btn btn-primary btn-lg btn-block float-right" id="registerBtn" type="submit">Simpan data</button>
+					<button class="mt-4 p-2 btn text-light btn-block bg-strong-bliss" id="registerBtn" type="submit"><h6>Simpan data</h6></button>
 				</form>
 			</div>
 		</div>

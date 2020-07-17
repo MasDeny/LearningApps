@@ -21,7 +21,17 @@ class AuthModel extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->userTbl);
+        $this->db->order_by("Users.create_time", "asc");
 
+        // fetch data join with profile table
+        if (array_key_exists("joinData", $params)) {
+            if ($params['joinData'] == 'murid') {
+                $this->db->join('Students', 'Students.idUsers=Users.idUsers');
+            }else{
+                $this->db->join('Teachers', 'Teachers.idUsers=Users.idUsers');
+            }
+        }
+        
         //fetch data by conditions
         if (array_key_exists("conditions", $params)) {
             foreach ($params['conditions'] as $key => $value) {
@@ -30,8 +40,9 @@ class AuthModel extends CI_Model
         }
 
 
+
         if (array_key_exists("id", $params)) {
-            $this->db->where('idUsers', $params['id']);
+            $this->db->where('Users.idUsers', $params['id']);
             $query = $this->db->get();
             $result = $query->row_array();
         } else {
@@ -41,15 +52,12 @@ class AuthModel extends CI_Model
             } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                 $this->db->limit($params['limit']);
             }
-
+            
             if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
                 $result = $this->db->count_all_results();
             } elseif (array_key_exists("returnType", $params) && $params['returnType'] == 'single') {
                 $query = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->row_array() : false;
-            // } elseif (array_key_exists("returnType", $params) && $params['returnType'] == 'login') {
-            //     $query = $this->db->get();
-            //     $result = ($query->num_rows() > 0) ? $query->row_array() : false;
             } else {
                 $query = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->result_array() : false;

@@ -21,6 +21,13 @@ class Dashboard extends CI_Controller
         $this->load->view('admin/overview', $data);
     }
 
+    public function list_course() 
+    {
+        $data['title'] = "ListCourse";
+        $data['subtitle'] = "";   
+        $this->load->view('admin/Course/show', $data);
+    }
+
     // admin menu 
 
     public function admin_dash() 
@@ -36,6 +43,23 @@ class Dashboard extends CI_Controller
         $data['subtitle'] = "";
         $data['status'] = TRUE;   
         $this->load->view('admin/AdminMenu/adduser', $data);
+    }
+
+    public function list_user($role=null) 
+    {
+        $class = (int) $this->input->get('class');
+        if (!empty($class)) {
+            $data['class'] = $class;
+        }
+        if(empty($role)) {
+            if ($this->session->userdata('user_data')['role'] == 'guru') { redirect('dashboard/list_user/murid'); 
+            }
+            redirect('dashboard/admin_dash'); 
+        };
+        $data['title'] = $role=='murid'?"Daftar Murid":"Daftar Guru dan Admin";
+        $data['subtitle'] = "list";
+        $data['status'] = TRUE;   
+        $this->load->view('admin/AdminMenu/listuser', $data);
     }
 
     // teacher menu

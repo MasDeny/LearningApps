@@ -159,7 +159,7 @@ class Auth extends REST_Controller
             $newPassword = $this->put('new_password');
             $userData = array();
             $userData['password'] = md5($newPassword);
-            $userData['status'] = 1;
+            // $userData['status'] = 1;
 
             $update = $this->authModel->update($userData, $id);
 

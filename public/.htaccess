@@ -1,8 +1,23 @@
+<FilesMatch "^\.ht">
+    Require all denied
+</FilesMatch>
+
 RewriteEngine On
 Options +FollowSymLinks
 Options -Indexes
-RewriteCond $1 !^(index\\.php|javascript|css|images|robots\\.txt)
-RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.+)$ index.php/$1 [L]
+
+RewriteEngine on
+# not rewrite css, js and images
+RewriteCond %{REQUEST_URI} !\.(?:css|js|jpe?g|gif|png)$ [NC]
+RewriteRule ^abc/(.+)/(.+)/ abc.php?id=$1&name=$2 [L]
+
+# rewrite css, js and images, from root
+RewriteRule ^abc/[^/]+/[^/]+/(.+)$ $1  [L]
+
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>

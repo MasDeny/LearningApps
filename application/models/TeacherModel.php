@@ -46,9 +46,6 @@ class TeacherModel extends CI_Model {
             } elseif (array_key_exists("returnType", $params) && $params['returnType'] == 'single') {
                 $query = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->row_array() : false;
-            // } elseif (array_key_exists("returnType", $params) && $params['returnType'] == 'login') {
-            //     $query = $this->db->get();
-            //     $result = ($query->num_rows() > 0) ? $query->row_array() : false;
             } else {
                 $query = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->result_array() : false;

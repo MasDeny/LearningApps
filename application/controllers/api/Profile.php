@@ -17,6 +17,7 @@ class Profile extends REST_Controller
         $this->load->model('teacherModel');
         $this->load->model('studentModel');
         $this->load->library('upload');
+        $this->load->library('pagination');
     }
 
     // check password process
@@ -75,7 +76,7 @@ class Profile extends REST_Controller
             ], REST_Controller::HTTP_FORBIDDEN);
         } else {
 
-            $this->profile_validate($validator);
+            $this->profile_validate($validator, $type = 'register');
             $data = $this->do_upload();
 
             $userData = array(
@@ -168,9 +169,9 @@ class Profile extends REST_Controller
         if ($this->upload->do_upload('file')) {
 
             return array('status' => TRUE, 'message' => $dir . $name);
+
         } else {
 
-            unlink($dir . $name);
             return array('status' => FALSE, 'message' => "Gagal Upload, pastikan file sebesar 1MB dan berformat jpg|png|jpeg");
         }
     }
@@ -183,7 +184,7 @@ class Profile extends REST_Controller
         $role = $this->post('role') == 'murid' ? "students/" : "staff/";
         $dir = "upload/profile/" . $role;
         $validator = new Validator;
-        $this->profile_validate($validator);
+        $this->profile_validate($validator, $type = 'update');
 
         $con['returnType'] = 'single';
         $con['id'] = $id;
@@ -191,12 +192,21 @@ class Profile extends REST_Controller
 
         $this->post('role') == 'murid' ? $result = $this->studentModel->getRows($con) : $result = $this->teacherModel->getRows($con);
 
+        if (empty($result)) {
+            $this->response([
+                'status' => false,
+                'message' => 'Data Not Found'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        };
+
         $photo = $result['profilePhoto'];
 
-        if ($result['profilePhoto'] != $dir . $_FILES["file"]['name']) {
+        // $this->response(!empty($_FILES["file"]['name']));
+
+        if (!empty($_FILES["file"]['name'])) {
             $data = $this->do_upload();
             if (!$data['status']) {
-                unlink($_FILES[$data['message']]);
+                
                 // Set the response and exit
                 $this->response([
                     'status' => $data['status'],
@@ -243,20 +253,20 @@ class Profile extends REST_Controller
             } else {
                 // Set the response and exit
                 $this->response([
-                    'status' => TRUE,
+                    'status' => false,
                     'message' => 'Some problems occurred, please try again.'
                 ], REST_Controller::HTTP_BAD_REQUEST);
             }
         } else {
             // Set the response and exit
             $this->response([
-                'status' => TRUE,
+                'status' => FALSE,
                 'message' => 'Provide at least one user info to update.'
             ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
 
-    private function profile_validate($validator)
+    private function profile_validate($validator, $type)
     {
 
         $validator->setMessages([
@@ -281,20 +291,23 @@ class Profile extends REST_Controller
             'zip'       => 'required|numeric',
         ]);
 
-        $photo = $validator->make($_FILES, [
-            'file'      => 'required|uploaded_file|max:1M|mimes:jpg,jpeg,png,bmp',
-        ]);
+        $data->validate();
+
+        if ($type=='register') {
+            $photo = $validator->make($_FILES, [
+                'file'      => 'required|uploaded_file|max:1M|mimes:jpg,jpeg,png,bmp',
+            ]);
+            $photo->validate();
+        }
 
         // then validate
-        $data->validate();
-        $photo->validate();
 
-        if ($data->fails() || $photo->fails()) {
+        if ($data->fails() || $type=='register' ? $photo->fails() : false) {
 
             // handling errors
             $this->response([
                 'status' => FALSE,
-                'message' => $data->fails() ? $data->errors()->firstOfAll() : $photo->errors()->firstOfAll()
+                'message' => $data->errors()->firstOfAll()
             ], REST_Controller::HTTP_FORBIDDEN);
         }
     }
@@ -322,7 +335,9 @@ class Profile extends REST_Controller
 
     public function show_get($role = null)
     {
+
         $id = (int) $this->input->get('id');
+        $class = (int) $this->input->get('class');
 
         $con['returnType'] = 'getall';
         $con['conditions'] = array(
@@ -330,45 +345,136 @@ class Profile extends REST_Controller
             // 'status' => 1
         );
 
-        $role == 'murid'? $con['joinData'] = 'murid' : false;
-        $role == 'guru'? $con['joinData'] = 'guru' : false;
+        $role == 'murid' ? $con['joinData'] = 'murid' : false;
+        $role == 'guru' ? $con['joinData'] = 'guru' : false;
 
         if ($id != null) $con['id'] = $id;
+
+        $page = $this->pagination($role, $class);
+
+        if (empty($id)) {
+
+            if (!empty($class) && $role == 'murid') {
+                $con['conditions'] = array(
+                    'Students.class' => $class,
+                );
+            }
+
+            $con['limit'] = $page['per_page'];
+            $con['start'] = $page['start'];
+        }
+
         $result = $this->authModel->getRows($con);
 
-        // $con['returnType'] = 'single';
-        //         $con['conditions'] = array(
-        //             'idUsers' => $result['idUsers'],
-        //             // 'status' => 1
-        //         );
+        if ($result) {
+            $data = array();
+            if (empty($id)) {
+                foreach ($result as $row) {
+                    // if this is the first clip of a new sheet, make a new entry for it
+                    $profile_data = empty($con['limit']) ? $this->get_data($row, $role) : $this->get_data($row, $role);
 
-        // $role == 'murid' ? $profile = $this->studentModel->getRows($con) : $profile = $this->teacherModel->getRows($con);
+                    // add the current clip to the sheet
+                    array_push($data, $profile_data);
+                }
+                $result_all['pagination'] = $this->pagination->create_links();
+                $result_all['result'] = $data;
+            } else {
+                $result_all = $this->get_data($result, $role);
+            }
 
+            $this->response([
+                'status' => TRUE,
+                'message' => $result_all
+            ], REST_Controller::HTTP_OK);
+        } else {
+            // Set the response and exit
+            //BAD_REQUEST (400) being the HTTP response code
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Data Tidak Ditemukan'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
 
-        // $finalResult = array(
-        //     'id'                => (int) $result['idUsers'],
-        //     'username'          => $result['Username'],
-        //     'email'             => $result['Email'],
-        //     'role'              => $result['Role'],
-        //     'numberIdentity'    => $profile['idStudents'],
-        //     'fullname'          => $profile['name'],            'bornOfDate'        => $profile['bornOfDate'],
-        //     'gender'            => $profile['gender'],
-        //     'religion'          => $profile['religion'],
-        //     'address'           => json_decode($profile['address']),
-        //     'phone'             => (int) $profile['phone'],
-        //     'profilePhoto'      => base_url().$profile['profilePhoto'],
-        //     'device'            => (int) $result['Device'],
-        //     'status'            => $result['Status'] == 0 ? 'deactivate' : 'active',
-        //     'create_time'   => $result['create_time'],
-        //     'update_time'   => $result['update_time']
-        // );
+    private function get_data($row, $role)
+    {
+        $profile_data = array(
+            'id'                => (int) $row['idUsers'],
+            'username'          => $row['Username'],
+            'email'             => $row['Email'],
+            'role'              => $row['Role'],
+            'numberIdentity'    => $role == 'murid' ? $row['idStudents'] : $row['idTeachers'],
+            'fullname'          => $row['name'],
+            'bornOfDate'        => $row['bornOfDate'],
+            'gender'            => $row['gender'],
+            'religion'          => $row['religion'],
+            'address'           => json_decode($row['address']),
+            'phone'             => (int) $row['phone'],
+            'profilePhoto'      => base_url() . $row['profilePhoto'],
+            'device'            => (int) $row['Device'],
+            'status'            => $row['Status'] == 0 ? 'deactivate' : 'active',
+            'create_time'   => $row['create_time'],
+            'update_time'   => $row['update_time']
+        );
 
-        // $role == 'murid' ? $finalResult['class'] = (int) $profile['class'] : $finalResult['position'] = $profile['position'] ;
+        $role == 'murid' ? $profile_data['class'] = (int) $row['class'] : $profile_data['position'] = $row['position'];
 
-        $this->response([
-            'status' => TRUE,
-            'message' => $result
-        ], REST_Controller::HTTP_OK);
+        return $profile_data;
+    }
+
+    private function pagination($role, $class)
+    {
+        $cnt['returnType'] = 'count';
+        $cnt['conditions'] = array(
+            'role' => $role,
+            // 'status' => 1
+        );
+        if (!empty($class) && $role == 'murid') {
+            $cnt['conditions'] = array(
+                'Students.class' => $class,
+            );
+        }
+        $role == 'murid' ? $cnt['joinData'] = 'murid' : false;
+        $role == 'guru' ? $cnt['joinData'] = 'guru' : false;
+
+        $config = array();
+        $config["base_url"] = base_url() . "profile/" . $role;
+        $config["total_rows"] = $this->authModel->getRows($cnt);
+        $config["per_page"] = 5;
+        $config["uri_segment"] = 3;
+        $config['attributes'] = array('class' => 'page-link');
+        $config["use_page_numbers"] = TRUE;
+        $config["full_tag_open"] = '<ul class="pagination">';
+        $config["full_tag_close"] = '</ul>';
+        $config["first_tag_open"] = '<li class="page-item">';
+        $config["first_tag_close"] = '</li>';
+        $config["last_tag_open"]  = '<li class="page-item">';
+        $config["last_tag_close"] = '</li>';
+        $config['next_link'] = 'Next';
+        $config["next_tag_open"] = '<li class="page-item">';
+        $config["next_tag_close"] = '</li>';
+        $config['prev_link'] = 'Previous';
+        $config["prev_tag_open"] = '<li>';
+        $config["prev_tag_close"] = '</li>';
+        $config["cur_tag_open"] = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        //$config['display_pages'] = FALSE;
+        $config["last_link"] = "Last";
+        $config["first_link"] = "First";
+        $choice = $config["total_rows"] / $config["per_page"];
+        $config["num_links"] = round($choice);
+
+        $page =  $this->uri->segment(3);
+
+        $this->pagination->initialize($config);
+        $start = ($page - 1) * $config["per_page"];
+
+        return array(
+            'start' => $start,
+            'per_page'  => $config["per_page"]
+        );
     }
 }
 

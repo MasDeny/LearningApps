@@ -56,4 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 // $route['api/(:any)'] = ;
 $route['api/auth/login'] = 'api/auth/login';
 $route['api/auth/register'] = 'api/profile/register';
+$route['profile/(:any)'] = 'api/profile/show/$1';
+$route['profile/(:any)/(:num)'] = 'api/profile/show/$1/$2';
+$route['profile'] = 'api/profile/show';
 

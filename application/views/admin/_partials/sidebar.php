@@ -1,5 +1,5 @@
 <div class="app-main">
-    <div class="app-sidebar sidebar-shadow sidebar-text-dark">
+    <div class="app-sidebar sidebar-shadow bg-light sidebar-text-dark">
         <div class="app-header__logo">
             <div class="logo-src"></div>
             <div class="header__pane ml-auto">
@@ -37,7 +37,7 @@
                         <li class="app-sidebar__heading">Menu Utama</li>
                         <li>
                             <a href="<?php echo base_url() ?>dashboard" class="<?php echo $title == "Dashboard" ? "mm-active" : ""; ?>">
-                                <i class="metismenu-icon pe-7s-airplay icon-gradient bg-premium-dark"></i>
+                                <i class="metismenu-icon pe-7s-home icon-gradient bg-premium-dark"></i>
                                 Dashboard Statistik
                             </a>
                         </li>
@@ -77,7 +77,7 @@
                         </li>
                         <li class="app-sidebar__heading">Master Materi</li>
                         <li>
-                            <a href="dashboard-boxes.html" class="<?php echo $title == "ListCourse" ? "mm-active" : ""; ?>">
+                            <a href="<?php echo base_url() ?>dashboard/list_course" class="<?php echo $title == "ListCourse" ? "mm-active" : ""; ?>">
                                 <i class="metismenu-icon pe-7s-display1 icon-gradient bg-premium-dark"></i>
                                 List Daftar Materi
                             </a>
@@ -91,7 +91,7 @@
                         </li>
                         <li class="app-sidebar__heading">Master Siswa</li>
                         <li>
-                            <a href="forms-controls.html">
+                            <a href="<?php echo base_url() ?>dashboard/list_user/murid" class="<?php echo empty($class) && $title == 'Daftar Murid' ? "mm-active" : ""; ?>">
                                 <i class="metismenu-icon pe-7s-users icon-gradient bg-premium-dark">
                                 </i>List Data Siswa
                                 <i class="metismenu-state-icon pe-7s-angle-up caret-left"></i>
@@ -99,19 +99,19 @@
                         </li>
                         <ul class="mm-collapse mm-show">
                             <li>
-                                <a href="elements-dropdowns.html">
+                                <a href="<?php echo base_url() ?>dashboard/list_user/murid?class=1" class="<?php if (!empty($class)) echo $class == "1" ? "mm-active" : ""; ?>">
                                     <i class="metismenu-icon">
                                     </i>Siswa Kelas 1
                                 </a>
                             </li>
                             <li>
-                                <a href="elements-icons.html">
+                                <a href="<?php echo base_url() ?>dashboard/list_user/murid?class=2" class="<?php if (!empty($class)) echo $class == "2" && !empty($class) ? "mm-active" : ""; ?>">
                                     <i class="metismenu-icon">
                                     </i>Siswa Kelas 2
                                 </a>
                             </li>
                             <li>
-                                <a href="elements-badges-labels.html">
+                                <a href="<?php echo base_url() ?>dashboard/list_user/murid?class=3" class="<?php if (!empty($class)) echo $class == "3" && !empty($class) ? "mm-active" : ""; ?>">
                                     <i class="metismenu-icon">
                                     </i>Siswa Kelas 3
                                 </a>
@@ -120,25 +120,25 @@
                     <?php } ?>
                     <?php if ($this->session->userdata('user_data')['role'] == 'administrator') { ?>
                         <li class="app-sidebar__heading">Menu Admin</li>
-                        <li>
+                        <li class="pt-1">
                             <a href="<?php echo base_url() ?>dashboard/admin_dash" class="<?php echo $title == "Dashboard Admin" ? "mm-active" : ""; ?>">
                                 <i class="metismenu-icon pe-7s-home icon-gradient bg-premium-dark"></i>
                                 Dashboard Admin
                             </a>
                         </li>
-                        <li>
-                            <a href="<?php echo base_url() ?>dashboard" class="<?php echo $title == "ShowTeachers" ? "mm-active" : ""; ?>">
+                        <li class="pt-2">
+                            <a href="<?php echo base_url() ?>dashboard/list_user/guru" class="<?php echo $title == "ShowTeachers" ? "mm-active" : ""; ?>">
                                 <i class="metismenu-icon pe-7s-study icon-gradient bg-premium-dark"></i>
                                 List Daftar Guru
                             </a>
                         </li>
-                        <li>
-                            <a href="<?php echo base_url() ?>dashboard" class="<?php echo $title == "ShowStudents" ? "mm-active" : ""; ?>">
+                        <li class="pt-2">
+                            <a href="<?php echo base_url() ?>dashboard/list_user/murid" class="<?php echo $title == "ShowStudents" ? "mm-active" : ""; ?>">
                                 <i class="metismenu-icon pe-7s-users icon-gradient bg-premium-dark"></i>
                                 List Daftar Murid
                             </a>
                         </li>
-                        <li>
+                        <li class="pt-2">
                             <a href="<?php echo base_url() ?>dashboard/add_user" class="<?php echo $title == "Tambah Pengguna" ? "mm-active" : ""; ?>">
                                 <i class="metismenu-icon pe-7s-add-user icon-gradient bg-premium-dark"></i>
                                 Tambah Pengguna
