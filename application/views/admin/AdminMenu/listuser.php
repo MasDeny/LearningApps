@@ -50,11 +50,11 @@
                             <div class="btn-actions-pane-right">
                                 <div role="group" class="btn-group-sm btn-group">
                                     <?php if ($this->uri->segment(3) == 'murid') { ?>
-                                        <a href="<?php echo base_url() ?>dashboard/add_user" class="active btn bg-arielle-smile text-dark">
+                                        <a href="<?php echo base_url() ?>dashboard/add_user" class="active btn bg-info text-light">
                                             Tambah Murid
                                         </a>
                                     <?php } else { ?>
-                                        <a href="<?php echo base_url() ?>dashboard/add_user" class="active btn bg-strong-bliss text-dark">
+                                        <a href="<?php echo base_url() ?>dashboard/add_user" class="active btn bg-info text-light">
                                             Tambah Staff
                                         </a>
                                     <?php } ?>

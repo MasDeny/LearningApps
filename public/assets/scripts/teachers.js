@@ -6,7 +6,6 @@ function loadPagination(pagno) {
         type: 'get',
         dataType: 'json',
         success: function (response) {
-            console.log(response)
             $("#pagination_link").html(response.message.pagination);
             
             show_table(response.message.result);

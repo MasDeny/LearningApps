@@ -77,7 +77,7 @@ class Profile extends REST_Controller
         } else {
 
             $this->profile_validate($validator, $type = 'register');
-            $data = $this->do_upload();
+            $upload = $this->do_upload();
 
             $userData = array(
                 'username' => strip_tags($this->post('username')),
@@ -88,14 +88,14 @@ class Profile extends REST_Controller
 
 
 
-            if ($data['status']) {
+            if ($upload['status']) {
                 $insert = $this->authModel->insert($userData);
-                $profile = $this->add_profile($insert, $data['message']);
+                $profile = $this->add_profile($insert, $upload['message']);
             } else {
-                @unlink($_FILES[$data['message']]);
+                @unlink($_FILES[$upload['message']]);
                 $this->response([
-                    'status' => $data['status'],
-                    'message' => $data['message']
+                    'status' => $upload['status'],
+                    'message' => $upload['message']
                 ], REST_Controller::HTTP_FORBIDDEN);
             }
 
@@ -108,7 +108,7 @@ class Profile extends REST_Controller
                 ], REST_Controller::HTTP_CREATED);
             } else {
                 $this->authModel->delete($insert);
-                @unlink($_FILES[$data['message']]);
+                @unlink($_FILES[$upload['message']]);
                 // Set the response and exit
                 $this->response([
                     'status' => False,
@@ -121,7 +121,7 @@ class Profile extends REST_Controller
     // fungsi untuk menambahkan profile setelah register user
     protected function add_profile($userId, $photo)
     {
-        $profileData = $this->profile_data();
+        $profileData = $this->profile_data($data=null);
         $thirdData = array(
             'idUsers' => $userId,
             'profilePhoto' => $photo
@@ -201,8 +201,6 @@ class Profile extends REST_Controller
 
         $photo = $result['profilePhoto'];
 
-        // $this->response(!empty($_FILES["file"]['name']));
-
         if (!empty($_FILES["file"]['name'])) {
             $data = $this->do_upload();
             if (!$data['status']) {
@@ -217,7 +215,7 @@ class Profile extends REST_Controller
             $photo = $data['message'];
         }
 
-        $profileData = $this->profile_data();
+        $profileData = $this->profile_data($result);
 
         if (!empty($id)) {
 
@@ -226,7 +224,7 @@ class Profile extends REST_Controller
 
                 $student = array(
                     'idStudents'    => strip_tags($this->post('id')),
-                    'class'         => strip_tags($this->post('class')),
+                    'class'         => empty($this->post('class')) ? $result['class'] : strip_tags($this->post('class')),
                     'profilePhoto'  => $photo
                 );
 
@@ -235,7 +233,7 @@ class Profile extends REST_Controller
             } else {
                 $teacher = array(
                     'idTeachers' => strip_tags($this->post('id')),
-                    'position' => strip_tags($this->post('position')),
+                    'position' => empty($this->post('position')) ? $result['position'] : strip_tags($this->post('position')),
                     'profilePhoto'  => $photo
                 );
 
@@ -302,32 +300,33 @@ class Profile extends REST_Controller
 
         // then validate
 
-        if ($data->fails() || $type=='register' ? $photo->fails() : false) {
+        if ($data->fails() && $type=='register' ? $photo->fails() : false) {
 
             // handling errors
             $this->response([
                 'status' => FALSE,
-                'message' => $data->errors()->firstOfAll()
+                'message' => $data->fails() ? $data->errors()->firstOfAll() : $photo->errors()->firstOfAll()
             ], REST_Controller::HTTP_FORBIDDEN);
         }
     }
 
-    private function profile_data()
+    private function profile_data($data)
     {
+        $j_adrs = json_decode($data['address']);
         $address = json_encode([
-            'address' => strip_tags($this->post('address')),
-            'city' => strip_tags($this->post('city')),
-            'state' => strip_tags($this->post('state')),
-            'zip' => strip_tags($this->post('zip'))
+            'address' => empty($this->post('address')) ? $j_adrs->{'address'} : strip_tags($this->post('address')),
+            'city' => empty($this->post('city')) ? $j_adrs->{'city'} : strip_tags($this->post('city')),
+            'state' => empty($this->post('state')) ? $j_adrs->{'state'} : strip_tags($this->post('state')),
+            'zip' => empty($this->post('zip')) ? $j_adrs->{'zip'} : strip_tags($this->post('zip'))
         ]);
 
         $profileData = array(
-            'name' => strip_tags($this->post('fullname')),
-            'bornOfDate' => $this->post('place') . ', ' . $this->post('date'),
-            'gender' => strip_tags($this->post('gender')),
-            'religion' => strip_tags($this->post('religion')),
+            'name' => empty($this->post('fullname')) ? $data['fullname'] : strip_tags($this->post('fullname')),
+            'bornOfDate' => empty($this->post('bornOfDate')) ? $data['bornOfDate'] : $this->post('place') . ', ' . $this->post('date'),
+            'gender' => empty($this->post('gender')) ? $data['gender'] : strip_tags($this->post('gender')),
+            'religion' => empty($this->post('religion')) ? $data['religion'] : strip_tags($this->post('religion')),
             'address' => $address,
-            'phone' => strip_tags($this->post('phone'))
+            'phone' => empty($this->post('phone')) ? $data['phone'] : strip_tags($this->post('phone'))
         );
 
         return $profileData;

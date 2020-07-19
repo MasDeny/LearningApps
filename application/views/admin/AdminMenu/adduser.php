@@ -25,7 +25,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="main-card mb-3 p-5 card">
+		<div class="main-card mb-3 card">
+			<div class="card-header bg-arielle-smile"></div>
 			<div class="card-body">
 				<form id="submit" url="<?php echo base_url() ?>" enctype="multipart/form-data">
 					<h5 class="card-title">Data Pengguna</h5>
@@ -39,7 +40,7 @@
 						<div class="col-md-4">
 							<div class="position-relative form-group">
 								<label>Nama Pengguna</label>
-								<input name="username" placeholder="Masukkan Nama Pengguna" type="text" class="form-control">
+								<input name="username" placeholder="Masukkan Nama Pengguna" type="text" class="form-control caps">
 							</div>
 						</div>
 						<div class="col-md-3">
@@ -73,19 +74,19 @@
 							<div class="col-md-3">
 								<div class="position-relative form-group">
 									<label class="id">Nomor Induk Pegawai</label>
-									<input name="id" type="text" class="form-control">
+									<input name="id" type="text" class="form-control upper">
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="position-relative form-group">
 									<label class="">Nama Lengkap</label>
-									<input name="fullname" id="fullname" type="text" class="form-control">
+									<input name="fullname" id="fullname" type="text" class="form-control caps">
 								</div>
 							</div>
 							<div class="col-md-3" id="position">
 								<div class="position-relative form-group">
 									<label class="">Posisi Di Sekolah</label>
-									<input name="position" id="position" type="text" class="form-control">
+									<input name="position" id="position" type="text" class="form-control caps">
 								</div>
 							</div>
 							<div class="col-md-3" id="class">
@@ -101,7 +102,7 @@
 							<div class="col-md-8">
 								<div class="position-relative form-group">
 									<label class="">Tempat Lahir</label>
-									<input name="place" id="place" type="text" class="form-control">
+									<input name="place" id="place" type="text" class="form-control caps">
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -144,19 +145,19 @@
 						</div>
 						<div class="position-relative form-group">
 							<label for="exampleAddress" class="">Alamat</label>
-							<input name="address" id="address" type="text" class="form-control">
+							<input name="address" id="address" type="text" class="form-control caps">
 						</div>
 						<div class="form-row">
 							<div class="col-md-6">
 								<div class="position-relative form-group">
 									<label class="">Kota / Kabupaten</label>
-									<input name="city" id="city" type="text" class="form-control">
+									<input name="city" id="city" type="text" class="form-control caps">
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="position-relative form-group">
 									<label class="">Provinsi</label>
-									<input name="state" id="state" type="text" class="form-control">
+									<input name="state" id="state" type="text" class="form-control caps">
 								</div>
 							</div>
 							<div class="col-md-2">
@@ -171,7 +172,7 @@
 							<input name="file" id="file" type="file" class="form-control dropify" accept="image/*" data-max-file-size="1M" data-height="300" data-allowed-file-extensions="jpg jpeg png" data-errors-position="outside" multiple>
 						</div>
 					</div>
-					<button class="mt-4 p-2 btn text-light btn-block bg-strong-bliss" id="registerBtn" type="submit"><h6>Simpan data</h6></button>
+					<button class="mt-4 p-2 btn text-light btn-block bg-arielle-smile" id="registerBtn" type="submit"><h6>Simpan data</h6></button>
 				</form>
 			</div>
 		</div>
