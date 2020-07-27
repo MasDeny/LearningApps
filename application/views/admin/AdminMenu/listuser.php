@@ -3,9 +3,7 @@
 
 <head>
     <?php $this->load->view("admin/_partials/head.php") ?>
-    <style>
-
-    </style>
+    <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/dropify.min.css" />
 </head>
 
 <body data-url="<?php echo base_url() ?>" data-role="<?php echo $this->session->userdata("user_data")["role"] ?>">
@@ -93,8 +91,10 @@
         <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/teachers.js" hidden></script>
     <?php } ?>
     <?php $this->load->view("admin/_partials/footer.php") ?>
+    <?php $this->load->view("admin/_partials/modals-update.php") ?>
     <?php $this->load->view("admin/_partials/modals-view.php") ?>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/dropify.min.js"></script>
 </body>
 
 </html>

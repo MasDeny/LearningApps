@@ -21,7 +21,7 @@ class AuthModel extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->userTbl);
-        $this->db->order_by("Users.create_time", "asc");
+        $this->db->order_by("Users.create_time", "desc");
 
         // fetch data join with profile table
         if (array_key_exists("joinData", $params)) {
@@ -74,7 +74,7 @@ class AuthModel extends CI_Model
     public function insert($data)
     {
         if ($data['role'] == 'administrator' || $data['role'] == 'guru') {
-            $data['status'] = 1;
+            $data['status'] = 2;
         }
         //add created and modified date if not exists
         if (!array_key_exists("create_time", $data)) {

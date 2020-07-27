@@ -127,13 +127,13 @@
                             </a>
                         </li>
                         <li class="pt-2">
-                            <a href="<?php echo base_url() ?>dashboard/list_user/guru" class="<?php echo $title == "ShowTeachers" ? "mm-active" : ""; ?>">
+                            <a href="<?php echo base_url() ?>dashboard/list_user/guru" class="<?php echo $title == "Daftar Guru dan Admin" ? "mm-active" : ""; ?>">
                                 <i class="metismenu-icon pe-7s-study icon-gradient bg-premium-dark"></i>
                                 List Daftar Guru
                             </a>
                         </li>
                         <li class="pt-2">
-                            <a href="<?php echo base_url() ?>dashboard/list_user/murid" class="<?php echo $title == "ShowStudents" ? "mm-active" : ""; ?>">
+                            <a href="<?php echo base_url() ?>dashboard/list_user/murid" class="<?php echo $title == "Daftar Murid" ? "mm-active" : ""; ?>">
                                 <i class="metismenu-icon pe-7s-users icon-gradient bg-premium-dark"></i>
                                 List Daftar Murid
                             </a>

@@ -11,106 +11,101 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-md-12 d-flex justify-content-center mb-auto pb-1">
-                            <img class="img-fluid rounded" src="" id="photo" style="height: 65%; width:auto;" >
+                            <img class="img-fluid rounded" src="" id="photo-view" height="45">
                         </div>
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="input-group col-sm-6 pb-2">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Username : </button>
+                                        <button class="btn btn-info">Username : </button>
                                     </div>
-                                    <p class="form-control" id="username"></p>
+                                    <p class="form-control" id="username-view"></p>
                                 </div>
                                 <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Email : </button>
+                                        <button class="btn btn-info">Email : </button>
                                     </div>
-                                    <p class="form-control" id="email"></p>
+                                    <p class="form-control" id="email-view"></p>
                                 </div>
                                 <div class="input-group col-sm-6 pb-2">
                                     <div class="input-group-prepend">
                                     <?php if($this->uri->segment(3)=='murid'){?>
-                                        <button class="btn btn-secondary">NIS : </button>
+                                        <button class="btn btn-info">NIS : </button>
                                     <?php }else{ ?>
-                                        <button class="btn btn-secondary">NIP : </button>
+                                        <button class="btn btn-info">NIP : </button>
                                     <?php } ?>
                                     </div>
-                                    <p class="form-control" id="identity"> TKL-456 </p>
+                                    <p class="form-control" id="identity-view"></p>
                                 </div>
                                 <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Nama Lengkap : </button>
+                                        <button class="btn btn-info">Nama Lengkap : </button>
                                     </div>
-                                    <p class="form-control" id="fullname"></p>
+                                    <p class="form-control" id="fullname-view"></p>
                                 </div>
                                 <?php if ($this->uri->segment(3)=='murid') { ?>
                                 <div class="input-group col-sm-6 pb-2">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Kelas : </button>
+                                        <button class="btn btn-info">Tahun masuk : </button>
                                     </div>
-                                    <p class="form-control" id="class"></p>
+                                    <p class="form-control" id="years-view"></p>
                                 </div>
-                                <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
-                                    <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">TTL : </button>
-                                    </div>
-                                    <p class="form-control" id="bod"></p>
-                                </div>
+                                
                                 <?php }else{ ?>
                                     <div class="input-group col-sm-6 pb-2">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Posisi : </button>
+                                        <button class="btn btn-info">Posisi : </button>
                                     </div>
-                                    <p class="form-control" id="position"></p>
-                                </div>
-                                <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
-                                    <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">TTL : </button>
-                                    </div>
-                                    <p class="form-control" id="bod"></p>
+                                    <p class="form-control" id="position-view"></p>
                                 </div>
                                 <?php } ?>
+                                <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-info">TTL : </button>
+                                    </div>
+                                    <p class="form-control" id="bod-view"></p>
+                                </div>
                                 <div class="input-group col-sm-6 pb-2">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Jenis Kelamin : </button>
+                                        <button class="btn btn-info">Jenis Kelamin : </button>
                                     </div>
-                                    <p class="form-control" id="gender"></p>
+                                    <p class="form-control" id="gender-view"></p>
                                 </div>
                                 <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Agama : </button>
+                                        <button class="btn btn-info">Agama : </button>
                                     </div>
-                                    <p class="form-control" id="religion"></p>
+                                    <p class="form-control" id="religion-view"></p>
                                 </div>
                                 <div class="input-group col-sm-12 pb-2" style="padding-right: 35px;">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Alamat : </button>
+                                        <button class="btn btn-info">Alamat : </button>
                                     </div>
-                                    <p class="form-control"  id="address"></p>
+                                    <p class="form-control"  id="address-view"></p>
                                 </div>
                                 <div class="input-group col-sm-6 pb-2">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Kota : </button>
+                                        <button class="btn btn-info">Kota : </button>
                                     </div>
-                                    <p class="form-control" id="city"> </p>
+                                    <p class="form-control" id="city-view"> </p>
                                 </div>
                                 <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Provinsi : </button>
+                                        <button class="btn btn-info">Provinsi : </button>
                                     </div>
-                                    <p class="form-control" id="state"></p>
+                                    <p class="form-control" id="state-view"></p>
                                 </div>
                                 <div class="input-group col-sm-6 pb-2">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Kode Pos : </button>
+                                        <button class="btn btn-info">Kode Pos : </button>
                                     </div>
-                                    <p class="form-control" id="zip"></p>
+                                    <p class="form-control" id="zip-view"></p>
                                 </div>
                                 <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-secondary">Nomer Telepon : </button>
+                                        <button class="btn btn-info">Nomer Telepon : </button>
                                     </div>
-                                    <p class="form-control" id="phone"></p>
+                                    <p class="form-control" id="phone-view"></p>
                                 </div>
                             </div>
                         </div>

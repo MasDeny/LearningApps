@@ -77,19 +77,19 @@
 									<input name="id" type="text" class="form-control upper">
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-5">
 								<div class="position-relative form-group">
 									<label class="">Nama Lengkap</label>
 									<input name="fullname" id="fullname" type="text" class="form-control caps">
 								</div>
 							</div>
-							<div class="col-md-3" id="position">
+							<div class="col-md-4" id="position">
 								<div class="position-relative form-group">
 									<label class="">Posisi Di Sekolah</label>
 									<input name="position" id="position" type="text" class="form-control caps">
 								</div>
 							</div>
-							<div class="col-md-3" id="class">
+							<div class="col-md-2" id="class">
 								<div class="position-relative form-group">
 									<label class="">Kelas</label>
 									<select name="class" id="class" class="form-control" required>
@@ -97,6 +97,12 @@
 										<option value="2">Kelas 2</option>
 										<option value="3">Kelas 3</option>
 									</select>
+								</div>
+							</div>
+							<div class="col-md-2" id="masuk">
+								<div class="position-relative form-group">
+									<label class="">Tahun Masuk</label>
+									<input name="years" id="years" type="text" class="form-control">
 								</div>
 							</div>
 							<div class="col-md-8">

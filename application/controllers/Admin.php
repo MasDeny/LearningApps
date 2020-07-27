@@ -52,7 +52,7 @@ class Admin extends CI_Controller
         $con['conditions'] = array(
             'email' => $email,
             'password' => md5($password),
-            // 'status' => 1
+            'status' => 2
         );
 
         $result = $this->authModel->getRows($con);

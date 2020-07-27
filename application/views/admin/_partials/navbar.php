@@ -50,9 +50,9 @@
                                 <div class="btn-group">
                                     <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
                                         <?php if ($this->session->userdata('user_data')['profilePhoto'] == base_url()) { ?>
-                                            <img width="42" class="rounded-circle" src="<?php echo base_url() ?>upload/profile/default.jpg" alt="">
+                                            <img width="35" class="rounded-circle img-fluid" src="<?php echo base_url() ?>upload/profile/default.jpg" alt="Profile Picture">
                                         <?php }else{ ?>
-                                            <img width="42" class="rounded-circle" src="<?php echo $this->session->userdata('user_data')['profilePhoto'] ?>" alt="">
+                                            <img width="35" class="rounded-circle img-fluid" src="<?php echo $this->session->userdata('user_data')['profilePhoto'] ?>" alt="Profile Picture">
                                         <?php } ?>
                                         <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                     </a>
@@ -66,7 +66,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="widget-content-left  ml-3 header-user-info">
+                            <div class="widget-content-left  ml-3 header-user-info mr-sm-2  /">
                                 <div class="widget-heading">
                                     <?php echo $this->session->userdata('user_data')['fullname'] ?>
                                 </div>
