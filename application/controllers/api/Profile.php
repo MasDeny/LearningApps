@@ -134,7 +134,9 @@ class Profile extends REST_Controller
                     'message' => $data['message']
                 ], REST_Controller::HTTP_FORBIDDEN);
             }
-            unlink($photo);
+            if (!empty($photo)) {
+                unlink($photo);
+            }
             $photo = $data['message'];
         }
 
@@ -170,7 +172,7 @@ class Profile extends REST_Controller
                 // Set the response and exit
                 $this->response([
                     'status' => TRUE,
-                    'message' => 'The user info has been updated successfully.'
+                    'message' => 'Pengguna berhasil diperbaharui'
                 ], REST_Controller::HTTP_OK);
             } else {
                 // Set the response and exit

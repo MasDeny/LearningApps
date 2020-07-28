@@ -114,7 +114,13 @@ function modal_detail(response) {
     $('#state-view').text(response.address.state)
     $('#zip-view').text(response.address.zip)
     $('#phone-view').text(response.phone)
-    $("#photo-view").attr("src", photo);
+    var drEvent = $(".dropify-view").dropify({ defaultFile: photo, messages: {
+        'replace': ''
+    } });
+    drEvent = drEvent.data('dropify');
+    drEvent.settings.defaultFile = photo;
+    drEvent.destroy();
+    drEvent.init();
 }
 
 $(document).on("click", ".pagination li a", function (event) {
@@ -181,24 +187,93 @@ $(document).on("click", "#btn-edit", function (event) {
 });
 
 function modal_update(response) {
+
+    // update data user profile
     var photo = response.profilePhoto === 'http://localhost/learning/public/' ? 'http://localhost/learning/public/upload/profile/default.jpg' : response.profilePhoto;
 
-    $('#username').val(response.username)
-    $('#email').val(response.email)
-    $('#identity').val(response.numberIdentity)
-    $('#fullname').val(response.fullname)
-    $('#years').val(response.schoolYear)
-    $('#bod').val(response.bornOfDate)
-    $('#gender').val(response.gender)
-    $('#religion').val(response.religion)
-    $('#address').val(response.address.address)
-    $('#city').val(response.address.city)
-    $('#state').val(response.address.state)
-    $('#zip').val(response.address.zip)
-    $('#phone').val(response.phone)
-    html = `<input name="file" id="file" type="file" class="form-control dropify" accept="image/*" data-max-file-size="1M" data-height="300" data-allowed-file-extensions="jpg jpeg png" data-errors-position="outside" data-default-file="`+ photo +`" multiple>`
+    var bod = response.bornOfDate.split(', ')
 
-    $('#photo').html(html)
+    $('input[name=username]').val(response.username).prop('readOnly', true);
+    $('input[name=email]').val(response.email).prop('readOnly', true);
+    $('input[name=id]').val(response.numberIdentity)
+    $('input[name=fullname]').val(response.fullname)
+    $('input[name=years]').val(response.schoolYear)
+    $('input[name=class]').val(response.class)
+    $('input[name=place]').val(bod[0])
+    $('input[name=date]').val(bod[1])
+    $('input[name=gender]').val(response.gender)
+    $('input[name=religion]').val(response.religion)
+    $('input[name=address]').val(response.address.address)
+    $('input[name=city]').val(response.address.city)
+    $('input[name=state]').val(response.address.state)
+    $('input[name=zip]').val(response.address.zip)
+    $('input[name=phone]').val(response.phone)
+    $('input[name=file]').attr("data-default-file", photo);
 
-    $(".dropify").dropify({ messages: { remove: "Hapus", error: "Ooops, something wrong happended." }, error: { fileSize: "Ukuran gambar terlalu besar, maksimal ({{ value }}).", fileExtension: "Format gambar tidak diijinkan, untuk format ({{ value }})." }, tpl: { clearButton: '<button type="button" class="dropify-clear btn btn-danger">{{ remove }}</button>' } });
+    var drEvent = $(".dropify").dropify({ messages: { error: "Ooops, something wrong happended." }, error: { fileSize: "Ukuran gambar terlalu besar, maksimal ({{ value }}).", fileExtension: "Format gambar tidak diijinkan, untuk format ({{ value }})."} });
+    
+    drEvent = drEvent.data('dropify');
+    drEvent.resetPreview();
+    drEvent.clearElement();
+    drEvent.settings.defaultFile = photo;
+    drEvent.destroy();
+    drEvent.init();
+    
+    $("#edit-profile").attr("role-user", response.role);
 }
+
+function hideNotification() {
+    $("#toast-container").fadeOut(), $(".toast").remove();
+}
+
+// update data user
+$(document).on("submit", "#edit-profile", function (e) {
+    const roleEdit = $("#edit-profile").attr("role-user");
+    e.preventDefault();
+    var formData = new FormData(this)
+        formData.append('role', roleEdit)
+    $.ajax({
+        url: url + "api/profile/update",
+        type: "POST",
+        data: formData,
+        contentType: !1,
+        cache: !1,
+        processData: !1,
+        success: function (t) {
+            var a = $(
+                '<div class="toast toast-success" aria-live="assertive"><button type="button" class="toast-close-button" role="button" onclick="hideNotification()">×</button><div class="toast-title">Berhasil</div><div class="toast-message">' +
+                    t.message +
+                    "</div></div>"
+            );
+            $('.bd-edit-modal-lg').modal('toggle')
+            $('.modal-backdrop').remove();
+            $("#toast-container").append(a)
+            $("#toast-container").fadeIn(2000);
+            setTimeout(function(){
+                $('#toast-container').fadeOut(2000, function(){
+                    location.reload(true);
+                });
+            }, 3000);
+        },
+        error: function (t) {
+            console.log(t)
+            let a = t.responseJSON;
+            if ((console.log(t), 403 != t.status)) {
+                var e = $(
+                    '<div class="toast toast-warning" aria-live="assertive"><button type="button" class="toast-close-button" role="button" onclick="hideNotification()">×</button><div class="toast-title">Peringatan</div><div class="toast-message">' +
+                        a.message +
+                        "</div></div>"
+                );
+                return $("#toast-container").append(e), $("#toast-container").slideDown().fadeIn(), !0;
+            }
+            Object.entries(a.message).forEach(([t, a]) => {
+                var e = $(
+                    '<div class="toast toast-warning" aria-live="assertive"><button type="button" class="toast-close-button" role="button" onclick="hideNotification()">×</button><div class="toast-title">Peringatan</div><div class="toast-message">' +
+                        `${a}` +
+                        "</div></div>"
+                );
+                return $("#toast-container").append(e), $("#toast-container").slideDown().fadeIn(), !0;
+            });
+        },
+    });
+});

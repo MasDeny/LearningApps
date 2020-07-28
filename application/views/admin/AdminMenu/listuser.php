@@ -84,6 +84,8 @@
             </div>
         </div>
     </div>
+    <div id="toast-container" class="toast-top-right" style="margin-top:8vh">
+	</div>
     <?php if ($this->uri->segment(3) == 'murid') { ?>
         <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/students.js" hidden></script>
     <?php } else { ?>
@@ -95,6 +97,7 @@
     <?php $this->load->view("admin/_partials/modals-view.php") ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/dropify.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 
 </html>

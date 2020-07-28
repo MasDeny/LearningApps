@@ -1,115 +1,130 @@
-<div class="col-lg-12">
+<div class="col-lg-12 pt-3">
     <div class="row">
-        <div class="col-md-12 d-flex justify-content-center mb-auto pb-1">
-            <div class="position-relative form-group" id="photo">
-                <label for="exampleAddress" class="">Upload Foto Profile</label>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <form id="submit" url="<?php echo base_url() ?>" enctype="multipart/form-data">
+        <form id="edit-profile" url="<?php echo base_url() ?>" enctype="multipart/form-data">
+            <div class="col-md-12">
                 <div class="form-row">
-                    <div class="input-group col-sm-6 pb-2">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-secondary">Username : </button>
-                        </div>
-                        <input class="form-control" id="username">
+                    <div class="position-relative input-group col-sm-12 pb-4" id="photo">
+                        <input name="file" id="file" type="file" class="form-control dropify" accept="image/*" data-max-file-size="1M" data-height="180" data-allowed-file-extensions="jpg jpeg png bmp" data-errors-position="outside" data-show-remove="false">
                     </div>
-                    <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
+                    <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-secondary">Email : </button>
+                            <a class="btn btn-secondary sl text-light">Username : </a>
                         </div>
-                        <input class="form-control" id="email">
+                        <input class="form-control caps" id="username" name="username">
                     </div>
-                    <div class="input-group col-sm-6 pb-2">
+                    <div class="input-group col-sm-6 pb-3">
+                        <div class="input-group-prepend">
+                            <a class="btn btn-secondary sl text-light">Email : </a>
+                        </div>
+                        <input class="form-control caps" name="email" type="email">
+                    </div>
+                    <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">
                             <?php if ($this->uri->segment(3) == 'murid') { ?>
-                                <button class="btn btn-secondary">NIS : </button>
+                                <a class="btn btn-secondary sl text-light">NIS : </a>
                             <?php } else { ?>
-                                <button class="btn btn-secondary">NIP : </button>
+                                <a class="btn btn-secondary sl text-light">NIP : </a>
                             <?php } ?>
                         </div>
-                        <input class="form-control" id="identity">
-                    </div>
-                    <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-secondary">Nama Lengkap : </button>
-                        </div>
-                        <input class="form-control" id="fullname">
+                        <input class="form-control upper" name="id">
                     </div>
                     <?php if ($this->uri->segment(3) == 'murid') { ?>
-                        <div class="input-group col-sm-6 pb-2">
+                        <div class="input-group col-sm-6 pb-3">
                             <div class="input-group-prepend">
-                                <button class="btn btn-secondary">Tahun masuk : </button>
+                                <a class="btn btn-secondary sl text-light">Nama Lengkap : </a>
                             </div>
-                            <input class="form-control" id="years">
+                            <input class="form-control caps" name="fullname">
                         </div>
-
-                    <?php } else { ?>
-                        <div class="input-group col-sm-6 pb-2">
+                        <div class="input-group col-sm-6 pb-3">
                             <div class="input-group-prepend">
-                                <button class="btn btn-secondary">Posisi : </button>
+                                <a class="btn btn-secondary sl text-light">Tahun masuk : </a>
                             </div>
-                            <input class="form-control" id="position">
+                            <input class="form-control" name="years">
+                        </div>
+                        <div class="input-group col-sm-6 pb-3">
+                            <div class="input-group-prepend">
+                                <a class="btn btn-secondary sl text-light">Kelas : </a>
+                            </div>
+                            <input class="form-control" type="number" name="class">
+                        </div>
+                    <?php } else { ?>
+                        <div class="input-group col-sm-6 pb-3">
+                            <div class="input-group-prepend">
+                                <a class="btn btn-secondary sl text-light">Posisi : </a>
+                            </div>
+                            <input class="form-control caps" name="position">
+                        </div>
+                        <div class="input-group col-sm-12 pb-3" tyle="padding-right: 5px;">
+                            <div class="input-group-prepend ll">
+                                <a class="btn btn-secondary ll text-light">Nama Lengkap : </a>
+                            </div>
+                            <input class="form-control caps" name="fullname">
                         </div>
                     <?php } ?>
-                    <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
+                    <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-secondary">TTL : </button>
+                            <a class="btn btn-secondary sl text-light">Tempat Lahir : </a>
                         </div>
-                        <input class="form-control" id="bod">
+                        <input class="form-control caps" name="place">
                     </div>
-                    <div class="input-group col-sm-6 pb-2">
+                    <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-secondary">Jenis Kelamin : </button>
+                            <a class="btn btn-secondary sl text-light">Tanggal Lahir : </a>
                         </div>
-                        <input class="form-control" id="gender">
+                        <input class="form-control" name="date">
                     </div>
-                    <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
+                    <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-secondary">Agama : </button>
+                            <a class="btn btn-secondary sl text-light">Jenis Kelamin : </a>
                         </div>
-                        <input class="form-control" id="religion">
+                        <input class="form-control" name="gender">
                     </div>
-                    <div class="input-group col-sm-12 pb-2" style="padding-right: 25px;">
+                    <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-secondary">Alamat : </button>
+                            <a class="btn btn-secondary sl text-light">Agama : </a>
                         </div>
-                        <input class="form-control" id="address">
+                        <input class="form-control caps" name="religion">
                     </div>
-                    <div class="input-group col-sm-6 pb-2">
+                    <div class="input-group col-sm-12 pb-3" style="padding-right: 5px;">
+                        <div class="input-group-prepend ll">
+                            <a class="btn btn-secondary ll text-light">Alamat : </a>
+                        </div>
+                        <input class="form-control caps" name="address">
+                    </div>
+                    <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-secondary">Kota : </button>
+                            <a class="btn btn-secondary sl text-light text-light">Kota : </a>
                         </div>
-                        <input class="form-control" id="city">
+                        <input class="form-control caps" name="city">
                     </div>
-                    <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
+                    <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-secondary">Provinsi : </button>
+                            <a class="btn btn-secondary sl text-light">Provinsi : </a>
                         </div>
-                        <input class="form-control" id="state">
+                        <input class="form-control caps" name="state">
                     </div>
-                    <div class="input-group col-sm-6 pb-2">
+                    <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-secondary">Kode Pos : </button>
+                            <a class="btn btn-secondary sl text-light">Kode Pos : </a>
                         </div>
-                        <input class="form-control" id="zip">
+                        <input class="form-control" type="number" name="zip">
                     </div>
-                    <div class="input-group col-sm-6 pb-2" style="margin-left: -20px;">
+                    <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-secondary">Nomer Telepon : </button>
+                            <a class="btn btn-secondary sl text-light">Nomer Telepon : </a>
                         </div>
-                        <input class="form-control" id="phone">
+                        <input class="form-control" type="number" name="phone">
                     </div>
-                    <div class="col-md-5 ml-md-auto text-right pr-4 pt-2">
+                    <div class="col-md-5 ml-md-auto text-right pr-1 pt-2">
                         <button class="btn text-light bg-info" id="submit-edit" type="submit">
-                            <h6>Simpan perubahan</h6>
+                            <h6>Simpan</h6>
                         </button>
                         <button class="btn text-light bg-secondary" data-dismiss="modal" aria-label="Close">
                             <h6>Batalkan</h6>
                         </button>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
