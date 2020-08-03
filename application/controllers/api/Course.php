@@ -107,10 +107,11 @@ class Course extends REST_Controller
     public function index_post()
     {
         $id = (int) strip_tags($this->post('id'));
+        $class = (int) strip_tags($this->post('class'));
         $con['returnType'] = 'getall';
         $con['joinData'] = 'all';
 
-        if (empty($id)|| $id==0) {
+        if (empty($id) || $id == 0) {
             $get = $this->courseModel->getRows($con);
             if (!$get) {
                 $this->response([
@@ -127,10 +128,16 @@ class Course extends REST_Controller
             }
             $result = $data;
         } else {
-            $class = $this->do_student($id);
-            $con['conditions'] = array(
-            'Courses.idClass <=' => $class['class']
-            );
+            if (empty($class) || $id == 0) {
+                $class = $this->do_student($id);
+                $con['conditions'] = array(
+                    'Courses.idClass <=' => $class['class']
+                );
+            } else {
+                $con['conditions'] = array(
+                    'Courses.idClass' => $class
+                );
+            }
             $get = $this->courseModel->getRows($con);
             if (!$get) {
                 $this->response([
@@ -147,7 +154,10 @@ class Course extends REST_Controller
             }
             $result = $data;
         }
-        $this->response($result);
+        $this->response([
+            'status' => True,
+            'message' => $result
+        ], REST_Controller::HTTP_OK);
     }
 
     protected function do_upload()
@@ -298,5 +308,4 @@ class Course extends REST_Controller
             ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
-
 }
