@@ -16,7 +16,7 @@
                         <div class="input-group-prepend">
                             <a class="btn btn-secondary sl text-light">Email : </a>
                         </div>
-                        <input class="form-control caps" name="email" type="email">
+                        <input class="form-control" name="email" type="email">
                     </div>
                     <div class="input-group col-sm-6 pb-3">
                         <div class="input-group-prepend">

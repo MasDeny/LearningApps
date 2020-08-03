@@ -8,8 +8,7 @@
  =========================================================
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */.pagination>li>a{background-color:#fff;color:#36383b}.pagination>li>a:focus,.pagination>li>a:hover,.pagination>li>span:focus,.pagination>li>span:hover{color:#5a5a5a;background-color:#eee;border-color:#ddd}.pagination>.active>a{color:#fff;background-color:#36383b!important;border:solid 1px #36383b!important}.pagination>.active>a:hover{background-color:#36383b!important;border:solid 1px #36383b}.caps{text-transform:capitalize}.upper{text-transform:uppercase;}.input-group-prepend{width : 35%; /*adjust as needed*/}.input-group-prepend>button.sl{width: 100%;overflow: hidden;}
- .input-group-prepend.ll{width : 17.1%; /*adjust as needed*/}.input-group-prepend>button.ll{width: 100%;overflow: hidden;}.input-group-prepend>a.sl{width: 100%;overflow: hidden;}
- .input-group-prepend.ll{width : 17.1%; /*adjust as needed*/}.input-group-prepend>a.ll{width: 100%;overflow: hidden;}
+ .input-group-prepend.ll{width : 17.1%; /*adjust as needed*/}.input-group-prepend>button.ll{width: 100%;overflow: hidden;}.input-group-prepend>a.sl{width: 100%;overflow: hidden;}.input-group-prepend.ll{width : 17.1%; /*adjust as needed*/}.input-group-prepend>a.ll{width: 100%;overflow: hidden;}
 /*!
  =========================================================
  * ArchitectUI HTML Theme Dashboard - v1.0.0

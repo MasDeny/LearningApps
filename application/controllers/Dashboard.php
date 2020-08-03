@@ -21,13 +21,6 @@ class Dashboard extends CI_Controller
         $this->load->view('admin/overview', $data);
     }
 
-    public function list_course() 
-    {
-        $data['title'] = "ListCourse";
-        $data['subtitle'] = "";   
-        $this->load->view('admin/Course/show', $data);
-    }
-
     // admin menu 
 
     public function admin_dash() 
@@ -63,6 +56,13 @@ class Dashboard extends CI_Controller
     }
 
     // teacher menu
+    public function add_exam() 
+    {
+        $data['title'] = "AddExam";
+        $data['subtitle'] = "";   
+        $this->load->view('admin/Exam/add', $data);
+    }
+
     public function pretestexam()
     {
         $data['title'] = "List Exam";  
@@ -82,6 +82,20 @@ class Dashboard extends CI_Controller
         $data['title'] = "List Exam";  
         $data['subtitle'] = "final"; 
         $this->load->view('admin/Exam/ListExamFinal', $data);
+    }
+
+    public function list_course() 
+    {
+        $data['title'] = "ListCourse";
+        $data['subtitle'] = "";   
+        $this->load->view('admin/Course/show', $data);
+    }
+
+    public function add_course() 
+    {
+        $data['title'] = "AddCourse";
+        $data['subtitle'] = "";   
+        $this->load->view('admin/Course/add', $data);
     }
 }
 

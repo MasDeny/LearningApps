@@ -154,6 +154,7 @@ $(document).on("click", "#btn-remove", function (event) {
                     },
                     error: function (t) {
                         console.log(t);
+                        location.reload(true);
                     }
                 })
 
@@ -209,6 +210,7 @@ function modal_update(response) {
     drEvent.init();
     
     $("#edit-profile").attr("role-user", response.role);
+    $('#pass-change').attr("data-id-user", response.id);
 }
 
 function hideNotification() {
@@ -236,9 +238,9 @@ $(document).on("submit", "#edit-profile", function (e) {
             $('.bd-edit-modal-lg').modal('toggle')
             $('.modal-backdrop').remove();
             $("#toast-container").append(a)
-            $("#toast-container").fadeIn(2000);
+            $("#toast-container").fadeIn(500);
             setTimeout(function(){
-                $('#toast-container').fadeOut(2000, function(){
+                $('#toast-container').fadeOut(2500, function(){
                     location.reload(true);
                 });
             }, 3000);
@@ -252,7 +254,12 @@ $(document).on("submit", "#edit-profile", function (e) {
                         a.message +
                         "</div></div>"
                 );
-                return $("#toast-container").append(e), $("#toast-container").slideDown().fadeIn(), !0;
+                $("#toast-container").append(e), $("#toast-container").slideDown().fadeIn(), !0;
+                setTimeout(function(){
+                    $('#toast-container').fadeOut(2500, function(){
+                        location.reload(true);
+                    });
+                }, 3000);
             }
             Object.entries(a.message).forEach(([t, a]) => {
                 var e = $(
@@ -260,8 +267,77 @@ $(document).on("submit", "#edit-profile", function (e) {
                         `${a}` +
                         "</div></div>"
                 );
-                return $("#toast-container").append(e), $("#toast-container").slideDown().fadeIn(), !0;
+                $("#toast-container").append(e), $("#toast-container").slideDown().fadeIn(), !0;
+                setTimeout(function(){
+                    $('#toast-container').fadeOut(2500, function(){
+                        location.reload(true);
+                    });
+                }, 3000);
             });
         },
     });
+});
+
+$(document).on("submit", "#pass-change", function (e) { 
+    const idUser = $("#pass-change").attr("data-id-user");
+    e.preventDefault();
+    var formData = new FormData(this)
+    formData.append('id', idUser)
+    formData.delete('email')
+        $.ajax({
+            url: url + "api/profile/user",
+            type: "POST",
+            data: formData,
+            contentType: !1,
+            cache: !1,
+            processData: !1,
+            success: function (t) {
+                var a = $(
+                    '<div class="toast toast-success" aria-live="assertive"><button type="button" class="toast-close-button" role="button" onclick="hideNotification()">×</button><div class="toast-title">Berhasil</div><div class="toast-message">' +
+                        t.message +
+                        "</div></div>"
+                );
+                $('.bd-edit-modal-lg').modal('toggle')
+                $('.modal-backdrop').remove();
+                $("#toast-container").append(a)
+                $("#toast-container").fadeIn(500);
+                setTimeout(function(){
+                    $('#toast-container').fadeOut(2500, function(){
+                        location.reload(true);
+                    });
+                }, 3000);
+            },
+            error: function (t) {
+                console.log(t)
+                let a = t.responseJSON;
+                if ((console.log(t), 403 != t.status)) {
+                    var e = $(
+                        '<div class="toast toast-warning" aria-live="assertive"><button type="button" class="toast-close-button" role="button" onclick="hideNotification()">×</button><div class="toast-title">Peringatan</div><div class="toast-message">' +
+                            a.message +
+                            "</div></div>"
+                    );
+                    $('.bd-edit-modal-lg').modal('toggle')
+                    $("#toast-container").append(e), $("#toast-container").slideDown().fadeIn(500);
+                    setTimeout(function(){
+                        $('#toast-container').fadeOut(2500, function(){
+                            location.reload(true);
+                        });
+                    }, 3000);
+                }
+                Object.entries(a.message).forEach(([t, a]) => {
+                    var e = $(
+                        '<div class="toast toast-warning" aria-live="assertive"><button type="button" class="toast-close-button" role="button" onclick="hideNotification()">×</button><div class="toast-title">Peringatan</div><div class="toast-message">' +
+                            `${a}` +
+                            "</div></div>"
+                    );
+                    $('.bd-edit-modal-lg').modal('toggle')
+                    $("#toast-container").append(e), $("#toast-container").slideDown().fadeIn(), !0;
+                    setTimeout(function(){
+                        $('#toast-container').fadeOut(2500, function(){
+                            location.reload(true);
+                        });
+                    }, 3000);
+                });
+            },
+        });
 });

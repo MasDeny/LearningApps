@@ -69,7 +69,7 @@
                             </li>
                         </ul>
                         <li>
-                            <a href="#" class="<?php echo $title == "AddExam" ? "mm-active" : ""; ?>">
+                            <a href="<?php echo base_url() ?>dashboard/add_exam" class="<?php echo $title == "AddExam" ? "mm-active" : ""; ?>">
                                 <i class="metismenu-icon pe-7s-note2 icon-gradient bg-premium-dark"></i>
                                 Tambah Soal
                                 <i class="metismenu-state-icon pe-7s-plus caret-left"></i>
@@ -83,7 +83,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="tables-regular.html" class="<?php echo $title == "AddCourse" ? "mm-active" : ""; ?>">
+                            <a href="<?php echo base_url() ?>dashboard/add_course" class="<?php echo $title == "AddCourse" ? "mm-active" : ""; ?>">
                                 <i class="metismenu-icon pe-7s-notebook icon-gradient bg-premium-dark"></i>
                                 Tambah Materi
                                 <i class="metismenu-state-icon pe-7s-plus caret-left"></i>
