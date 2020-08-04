@@ -4,9 +4,9 @@ var SClass = $('table').attr('data-class');
 
 function loadPagination(pagno) {
     if (SClass != '') {
-        var link = url + '/profile/murid/' + pagno + '?class=' + SClass
+        var link = url + 'profile/murid/' + pagno + '?class=' + SClass
     } else {
-        var link = url + '/profile/murid/' + pagno
+        var link = url + 'profile/murid/' + pagno
     }
     $.ajax({
         url: link,

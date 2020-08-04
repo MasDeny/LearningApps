@@ -59,8 +59,14 @@ class Course extends REST_Controller
         }
     }
 
+    public function delete_post($id)
+    {
+        
+    }
+
     public function index_get()
     {
+        //
         $id = (int) $this->input->get('id');
         $class = (int) $this->input->get('class');
 
@@ -99,7 +105,7 @@ class Course extends REST_Controller
                 array_push($data, $course_data);
             }
             $result['pagination'] = $this->pagination->create_links();
-            $result['response'] = $data;
+            $result['result'] = $data;
         }
         $this->response($result);
     }
@@ -252,8 +258,9 @@ class Course extends REST_Controller
 
         $config = array();
         $config["base_url"] = base_url() . "api/course/";
+        $config['reuse_query_string'] = true;
         $config["total_rows"] = $this->courseModel->getRows($cnt);
-        $config["per_page"] = 2;
+        $config["per_page"] = 3;
         $config["uri_segment"] = 3;
         $config['attributes'] = array('class' => 'page-link');
         $config["use_page_numbers"] = TRUE;
@@ -273,7 +280,7 @@ class Course extends REST_Controller
         $config['cur_tag_close'] = '</a></li>';
         $config['num_tag_open'] = '<li>';
         $config['num_tag_close'] = '</li>';
-        //$config['display_pages'] = FALSE;
+        $config['display_pages'] = true;
         $config["last_link"] = "Last";
         $config["first_link"] = "First";
         $choice = $config["total_rows"] / $config["per_page"];
@@ -308,4 +315,13 @@ class Course extends REST_Controller
             ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
+
+    // latex
+    // public function test_post()
+    // {
+    //     $post = strip_tags($this->post('tex'));
+    //     $lt = '$ '. $post . ' $';
+    //     $js = json_encode($lt);
+    //     $this->response(json_decode($js));
+    // }
 }

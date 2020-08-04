@@ -112,8 +112,8 @@
                                 <div class="row justify-content-center">
                                     <div class="col-md-8">
                                         <div class="position-relative form-group">
-                                            <h5><strong>Nilai yang harus dicapai : $\(\dfrac {40}{88}\)$ </strong></h5>
-                                            <input name="nilai" type="text" class="mt-2 form-control-lg form-control caps" id="target">
+                                            <h5><strong>Nilai yang harus dicapai : $ \sqrt{2\frac{3}{9}} $ </strong></h5>
+                                            <input name="nilai" type="text" class="mt-2 form-control-lg form-control caps" id="target" placeholder="$ \sqrt{2\frac{3}{9}} $">
                                         </div>
                                     </div>
                                 </div>
@@ -127,7 +127,6 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view("admin/_partials/footer.php") ?>
         <script type="text/x-mathjax-config">
             MathJax.Hub.Config({
                 tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
@@ -136,6 +135,7 @@
         <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
         </script>
         <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/add_exam.js"></script>
+        <?php $this->load->view("admin/_partials/footer.php") ?>
 </body>
 
 </html>

@@ -152,9 +152,9 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view("admin/_partials/footer.php") ?>
         <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/add_course.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js"></script>
+        <?php $this->load->view("admin/_partials/footer.php") ?>
 </body>
 
 </html>

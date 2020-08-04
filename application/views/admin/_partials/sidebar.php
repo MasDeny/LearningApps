@@ -30,7 +30,7 @@
                 </button>
             </span>
         </div>
-        <div class="scrollbar-sidebar">
+        <div class="scrollbar-sidebar scrollbar">
             <div class="app-sidebar__inner">
                 <ul class="vertical-nav-menu">
                     <?php if ($this->session->userdata('user_data')['role'] == 'guru') { ?>
