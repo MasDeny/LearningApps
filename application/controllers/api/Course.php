@@ -25,8 +25,8 @@ class Course extends REST_Controller
 
         $userData = array(
             'idCategory'    => strip_tags($this->post('kategori')),
-            'idClass'       => strip_tags($this->post('level')),
-            'idLevels'      => strip_tags($this->post('kelas')),
+            'idClass'       => strip_tags($this->post('kelas')),
+            'idLevels'      => strip_tags($this->post('level')),
             'chapter'       => 'Bab ' . strip_tags($this->post('kategori')),
             'title'         => strip_tags($this->post('judul')),
             'content'       => $content['message'],
@@ -59,9 +59,30 @@ class Course extends REST_Controller
         }
     }
 
-    public function delete_post($id)
+    public function delete_post()
     {
-        
+        $id = $this->post('id');
+        $con['id'] = $id;
+        $get = $this->courseModel->getRows($con);
+        if (!$get) {
+            $this->response([
+                'status' => False,
+                'message' => 'Tidak Ditemukan'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+        $delete = $this->courseModel->delete($id);
+        if ($delete) {
+            unlink($get['content']);
+            $this->response([
+                'status' => True,
+                'message' => 'Sukses Menghapus data'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => False,
+                'message' => 'Gagal Menghapus data'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
     }
 
     public function index_get()

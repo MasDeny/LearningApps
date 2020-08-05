@@ -68,7 +68,7 @@ class Profile extends REST_Controller
                 'password' => md5($this->post('password')),
                 'role' => strip_tags($this->post('role')),
             );
-
+            
             if ($upload['status']) {
                 $insert = $this->authModel->insert($userData);
                 $profile = $this->add_profile($insert, $upload['message']);
@@ -77,7 +77,7 @@ class Profile extends REST_Controller
                 $this->response([
                     'status' => $upload['status'],
                     'message' => $upload['message']
-                ], REST_Controller::HTTP_FORBIDDEN);
+                ], REST_Controller::HTTP_BAD_REQUEST);
             }
 
             // Check if the user data is inserted
@@ -132,7 +132,7 @@ class Profile extends REST_Controller
                 $this->response([
                     'status' => $data['status'],
                     'message' => $data['message']
-                ], REST_Controller::HTTP_FORBIDDEN);
+                ], REST_Controller::HTTP_BAD_REQUEST);
             }
             if (!empty($photo)) {
                 unlink($photo);
@@ -478,8 +478,15 @@ class Profile extends REST_Controller
         }
 
         // then validate
+        if ($type == 'register' ? $photo->fails() : false) {
+            // handling errors
+            $this->response([
+                'status' => FALSE,
+                'message' => $data->fails() ? $data->errors()->firstOfAll() : $photo->errors()->firstOfAll()
+            ], REST_Controller::HTTP_FORBIDDEN);
+        }
 
-        if ($data->fails() && $type == 'register' ? $photo->fails() : false) {
+        if ($data->fails()) {
             // handling errors
             $this->response([
                 'status' => FALSE,

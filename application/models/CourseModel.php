@@ -101,7 +101,8 @@ class CourseModel extends CI_Model {
 
     public function delete($id){
         //update user from users table
-        $delete = $this->db->delete('idCourses',array('id'=>$id));
+        $this->db->where('idCourses',$id);
+        $delete = $this->db->delete($this->userTbl);
         //return the status
         return $delete?true:false;
     }

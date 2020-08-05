@@ -54,8 +54,7 @@
             <div class="card-body">
                 <div class="tab-content" style="min-height: 30vh;">
                     <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
-                        <div class="row" id="course-content-1">
-                        </div>
+                        <div class="row" id="course-content-1"></div>
                     </div>
                     <div class="tab-pane tabs-animation fade" id="tab-content-1" role="tabpanel">
                         <div class="row" id="course-content-2">
@@ -72,9 +71,8 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/course.js" hidden></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/dropify.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/course.js" hidden></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <?php $this->load->view("admin/_partials/footer.php") ?>
 </body>
