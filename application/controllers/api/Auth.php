@@ -186,20 +186,20 @@ class Auth extends REST_Controller
     public function logout_post()
     {
         // Get the post data
-        $email = strip_tags($this->post('email'));
-        $password = $this->post('password');
-
+        $id = $this->post('id');
         // Validate the post data
-        if (!empty($email) && !empty($password)) {
+        if (!empty($id)) {
 
             // Check if any user exists with the given credentials
             $con['returnType'] = 'single';
-            $con['conditions'] = array(
-                'email' => $email,
-                'password' => md5($password),
-                // 'status' => 1
-            );
+            $con['id'] = $id;
             $result = $this->authModel->getRows($con);
+            if (!$result) {
+                $this->response([
+                    'status' => false,
+                    'message' => 'Data Not Found'
+                ], REST_Controller::HTTP_BAD_REQUEST);
+            }
             // check multiple device
             $device['returnType'] = 'login';
             $device['id'] = (int) $result['idUsers'];
