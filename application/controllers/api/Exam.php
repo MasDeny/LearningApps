@@ -302,7 +302,7 @@ class Exam extends REST_Controller
             'category'      => $row['category'],
             'subcategory'   => $row['subCategory'],
             'question'      => $row['question'],
-            'images'        => base_url() . $row['images'],
+            'images'        => empty($row['images']) ? null : base_url() . $row['images'],
             'choice'        => json_decode($row['multipleChoice']),
             'answer'        => $row['answer'],
             'point'         => $row['point'],
