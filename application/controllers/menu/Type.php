@@ -1,23 +1,20 @@
 <?php 
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 
-class Categories extends REST_Controller {
+class Type extends REST_Controller {
 
-    
     public function __construct()
     {
         parent::__construct();
         //load model categories
-        $this->load->model('categoriesModel');
+        $this->load->model('typeModel');
     }
     
-
     public function index_get()
     {
         $con['returnType'] = 'getall';
-        $result = $this->categoriesModel->getRows($con);
+        $result = $this->typeModel->getRows($con);
         if ($result) {
             $this->response([
                 'status' => TRUE,
@@ -35,4 +32,4 @@ class Categories extends REST_Controller {
 
 }
 
-/* End of file categories.php */
+/* End of file Type.php */

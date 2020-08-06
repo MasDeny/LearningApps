@@ -3,21 +3,22 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 
-class Categories extends REST_Controller {
+class Subcategories extends REST_Controller {
 
-    
     public function __construct()
     {
         parent::__construct();
         //load model categories
-        $this->load->model('categoriesModel');
+        $this->load->model('subcategoriesModel');
     }
-    
 
-    public function index_get()
+    public function index_get($id=null)
     {
         $con['returnType'] = 'getall';
-        $result = $this->categoriesModel->getRows($con);
+        $con['conditions'] = array(
+            'idCategory' => $id
+        );
+        $result = $this->subcategoriesModel->getRows($con);
         if ($result) {
             $this->response([
                 'status' => TRUE,
@@ -35,4 +36,4 @@ class Categories extends REST_Controller {
 
 }
 
-/* End of file categories.php */
+/* End of file Subcategories.php */

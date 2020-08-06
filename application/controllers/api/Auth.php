@@ -86,6 +86,7 @@ class Auth extends REST_Controller
                     'phone'             => $profile['phone'],
                     'profilePhoto'      => base_url().$profile['profilePhoto'],
                     'device'            => (int) $devicesUpdate['Device'],
+                    'level'             => (int) $profile['level'],
                     'status'            => $result['Status'] == 0 ? 'deactivate' : 'active',
                     'create_time'   => $result['create_time'],
                     'update_time'   => $result['update_time']
