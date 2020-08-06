@@ -116,11 +116,11 @@ class Auth extends REST_Controller
     }
 
     // change password
-    public function change_put()
+    public function change_post()
     {
 
-        $email = strip_tags($this->put('email'));
-        $oldPassword = $this->put('old_password');
+        $email = strip_tags($this->post('email'));
+        $oldPassword = $this->post('old_password');
         // Check if any user exists with the given credentials
         $con['returnType'] = 'single';
         $con['conditions'] = array(
@@ -140,7 +140,7 @@ class Auth extends REST_Controller
         $id = $result['idUsers'];
 
         $validator = new Validator;
-        $data = $validator->make($this->put(), [
+        $data = $validator->make($this->post(), [
             'new_password'              => 'required|min:6',
             'password_confirm'          => 'required|same:new_password'
         ]);
@@ -157,7 +157,7 @@ class Auth extends REST_Controller
                 'message' => $errors->firstOfAll()
             ], REST_Controller::HTTP_FORBIDDEN);
         } else {
-            $newPassword = $this->put('new_password');
+            $newPassword = $this->post('new_password');
             $userData = array();
             $userData['password'] = md5($newPassword);
             // $userData['status'] = 1;

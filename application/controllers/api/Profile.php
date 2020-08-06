@@ -106,8 +106,10 @@ class Profile extends REST_Controller
         $id = $this->post('id');
         $role = $this->post('role') == 'murid' ? "students/" : "staff/";
         $dir = "upload/profile/" . $role;
+        if (!empty($this->post('username'))) {
         $validator = new Validator;
         $this->profile_validate($validator, $type = 'update');
+        }
 
         $con['returnType'] = 'single';
         $con['id'] = $id;
