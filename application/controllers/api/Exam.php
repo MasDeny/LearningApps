@@ -18,6 +18,70 @@ class Exam extends REST_Controller
         $this->load->library('pagination');
     }
 
+    public function index_get($id = null)
+    {
+        $con['returnType'] = 'getall';
+        $con['joinData'] = 'all';
+        $page = $this->pagination($id);
+        $con['conditions'] = array(
+            'Exam.idType' => $id,
+        );
+        $con['limit'] = $page['per_page'];
+        $con['start'] = $page['start'];
+        $get = $this->examModel->getRows($con);
+        if (!$get) {
+            $this->response([
+                'status' => False,
+                'message' => 'Data not found, please try again'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+        $data = array();
+        foreach ($get as $row) {
+            // if this is the first clip of a new sheet, make a new entry for it
+            $exam_data = $this->do_list($row);
+            // add the current clip to the sheet
+            array_push($data, $exam_data);
+        }
+        $result['pagination'] = $this->pagination->create_links();
+        $result['result'] = $data;
+
+        $this->response([
+            'status' => True,
+            'result' => $result
+        ], REST_Controller::HTTP_OK);
+    }
+
+    public function index_post()
+    {
+        $type = $this->post('type');
+        $class = $this->post('class');
+        $con['returnType'] = 'getall';
+        $con['joinData'] = 'all';
+        $con['conditions'] = array(
+            'Exam.idType' => $type,
+            'Exam.idClass'=> $class
+        );
+        $get = $this->examModel->getRows($con);
+        if (!$get) {
+            $this->response([
+                'status' => False,
+                'message' => 'Data not found, please try again'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+        $data = array();
+        foreach ($get as $row) {
+            // if this is the first clip of a new sheet, make a new entry for it
+            $exam_data = $this->do_list($row);
+            // add the current clip to the sheet
+            array_push($data, $exam_data);
+        }
+
+        $this->response([
+            'status' => True,
+            'result' => $data
+        ], REST_Controller::HTTP_OK);
+    }
+
     public function add_post()
     {
         $this->do_validation();
@@ -39,7 +103,7 @@ class Exam extends REST_Controller
             'idLevels'      => strip_tags($this->post('level')),
             'question'      => $this->post('question'),
             'multipleChoice' => $choice,
-            'answer'        => $this->post('level'),
+            'answer'        => $this->post('answer'),
             'idTeachers'    => $this->session->userdata('user_data')['numberIdentity'],
             'point'         => strip_tags($this->post('nilai')),
         );
@@ -79,7 +143,7 @@ class Exam extends REST_Controller
         }
     }
 
-    // fungsi untuk melakukan upload foto profile
+    // fungsi untuk melakukan upload foto soal
     protected function do_upload()
     {
         $dir = "upload/exam/";
@@ -175,6 +239,80 @@ class Exam extends REST_Controller
                 'message' => $validate->errors()->firstOfAll()
             ], REST_Controller::HTTP_FORBIDDEN);
         }
+    }
+
+    private function pagination($type)
+    {
+        $cnt['returnType'] = 'count';
+        if (!empty($class)) {
+            $con['conditions'] = array(
+                'Exam.idType' => $type,
+            );
+            $cnt['joinData'] = 'all';
+        }
+
+        $config = array();
+        $config["base_url"] = base_url() . "api/exam/".$type;
+        $config['reuse_query_string'] = true;
+        $config["total_rows"] = $this->examModel->getRows($cnt);
+        $config["per_page"] = 5;
+        $config["uri_segment"] = 5;
+        $config['attributes'] = array('class' => 'page-link');
+        $config["use_page_numbers"] = TRUE;
+        $config["full_tag_open"] = '<ul class="pagination">';
+        $config["full_tag_close"] = '</ul>';
+        $config["first_tag_open"] = '<li class="page-item">';
+        $config["first_tag_close"] = '</li>';
+        $config["last_tag_open"]  = '<li class="page-item">';
+        $config["last_tag_close"] = '</li>';
+        $config['next_link'] = 'Next';
+        $config["next_tag_open"] = '<li class="page-item">';
+        $config["next_tag_close"] = '</li>';
+        $config['prev_link'] = 'Previous';
+        $config["prev_tag_open"] = '<li>';
+        $config["prev_tag_close"] = '</li>';
+        $config["cur_tag_open"] = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['display_pages'] = true;
+        $config["last_link"] = "Last";
+        $config["first_link"] = "First";
+        $choice = $config["total_rows"] / $config["per_page"];
+        $config["num_links"] = round($choice);
+
+        $page =  $this->uri->segment(4);
+
+        $this->pagination->initialize($config);
+        $start = ($page - 1) * $config["per_page"];
+
+        return array(
+            'start' => $start,
+            'per_page'  => $config["per_page"]
+        );
+    }
+
+    protected function do_list($row)
+    {
+        $profile_data = array(
+            'id'            => (int) $row['idExam'],
+            'jenis_soal'    => $row['typeName'],
+            'class'         => $row['nameClass'],
+            'level'         => $row['nameLevel'],
+            'category'      => $row['category'],
+            'subcategory'   => $row['subCategory'],
+            'question'      => $row['question'],
+            'images'        => base_url() . $row['images'],
+            'choice'        => json_decode($row['multipleChoice']),
+            'answer'        => $row['answer'],
+            'point'         => $row['point'],
+            'nama_guru'     => $row['name'],
+            'status'        => $row['status'],
+            'create_time'   => $row['create_time'],
+            'update_time'   => $row['update_time']
+        );
+
+        return $profile_data;
     }
 }
 

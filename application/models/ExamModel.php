@@ -21,15 +21,14 @@ class ExamModel extends CI_Model {
     {
         $this->db->select('*');
         $this->db->from($this->userTbl);
-        $this->db->order_by("Users.create_time", "desc");
+        $this->db->order_by("Exam.create_time", "desc");
 
         // fetch data join with profile table
         if (array_key_exists("joinData", $params)) {
-            if ($params['joinData'] == 'murid') {
-                $this->db->join('Students', 'Students.idUsers=Users.idUsers');
-            }else{
-                $this->db->join('Teachers', 'Teachers.idUsers=Users.idUsers');
-            }
+            $this->db->join('Class', 'Class.idClass=Exam.idClass');
+            $this->db->join('Levels', 'Levels.idLevels=Exam.idLevels');
+            $this->db->join('Teachers', 'Teachers.idTeachers=Exam.idTeachers');
+            $this->db->join('Type', 'Type.idType=Exam.idType');
         }
         
         //fetch data by conditions
@@ -42,7 +41,7 @@ class ExamModel extends CI_Model {
 
 
         if (array_key_exists("id", $params)) {
-            $this->db->where('Users.idUsers', $params['id']);
+            $this->db->where('Exam', $params['id']);
             $query = $this->db->get();
             $result = $query->row_array();
         } else {

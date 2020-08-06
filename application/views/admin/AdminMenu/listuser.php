@@ -37,7 +37,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="main-card mb-3 card">
+                <div class="main-card mb-3 card" style="min-height:60vh;">
                     <div class="card-header">
                         <?php if ($this->uri->segment(3) == 'murid') { ?>
                             Murid yang terdaftar pada aplikasi

@@ -5,7 +5,7 @@
     <?php $this->load->view("admin/_partials/head.php") ?>
 </head>
 
-<body>
+<body data-url="<?php echo base_url() ?>" data-type="<?php echo $this->uri->segment(3); ?>">
     <?php $this->load->view("admin/_partials/navbar.php") ?>
     <?php $this->load->view("admin/_partials/sidebar.php") ?>
     <div class="app-main__inner">
@@ -26,27 +26,23 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="main-card mb-3 card">
-                    <div class="card-header">Active Users
-                        <div class="btn-actions-pane-right">
-                            <div role="group" class="btn-group-sm btn-group">
-                                <button class="active btn btn-focus">Last Week</button>
-                                <button class="btn btn-focus">All Month</button>
-                            </div>
-                        </div>
+                <div class="main-card mb-3 card" style="min-height:60vh">
+                    <div class="card-header">Daftar Latihan Soal
                     </div>
                     <div class="table-responsive">
                         <table class="align-middle mb-0 table table-borderless table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
-                                    <th>Name</th>
-                                    <th class="text-center">City</th>
+                                    <th>Nama Guru</th>
+                                    <th class="text-center">Jenis Soal</th>
+                                    <th class="text-center">Kelas</th>
+                                    <th class="text-center">Tingkatan</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="table_view">
                                 <tr>
                                     <td class="text-center text-muted">#345</td>
                                     <td>
@@ -153,14 +149,14 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-block text-center card-footer">
-                        <button class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i class="pe-7s-trash btn-icon-wrapper"> </i></button>
-                        <button class="btn-wide btn btn-success">Save</button>
+                    <div class="d-block text-center card-footer mt-auto">
+                        <nav class="d-flex justify-content-center" aria-label="Page navigation" id="pagination_link"></nav>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/exam.js" hidden></script>
     <?php $this->load->view("admin/_partials/footer.php") ?>
 
 </body>
