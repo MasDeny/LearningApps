@@ -8,6 +8,8 @@
     <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/jquery.smartWizard.js"></script>
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/dropify.min.css" />
     <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/dropify.min.js"></script>
+    <link rel="stylesheet" href="<?php echo base_url() ?>assets/mathquill/mathquill.css" />
+  <script src="<?php echo base_url() ?>assets/mathquill/mathquill.min.js"></script>
 </head>
 
 <body data-url="<?php echo base_url() ?>" data-role="<?php echo $this->session->userdata("user_data")["role"] ?>">
@@ -49,7 +51,7 @@
                             </a>
                         </li>
                     </ul>
-                    <form id="submit" url="<?php echo base_url() ?>" enctype="multipart/form-data">
+                    <form id="submit-exam" url="<?php echo base_url() ?>" enctype="multipart/form-data">
                         <div class="tab-content" style="min-height: 500px;">
                             <div id="step-1" class="tab-pane pt-5" role="tabpanel" aria-labelledby="step-1">
                                 <div class="row justify-content-center">
@@ -66,7 +68,7 @@
                                     <div class="col-md-4">
                                         <div class="position-relative form-group">
                                             <h5><strong>Kategori materi : </strong></h5>
-                                            <select class="mb-2 mt-2 form-control-lg form-control caps" name="kategori">
+                                            <select class="mb-2 mt-2 form-control-lg form-control caps" id="kategori">
                                                 <option disabled>-- Pilih Kategori Materi --</option>
                                                 <option>Large Select</option>
                                             </select>
@@ -75,7 +77,7 @@
                                     <div class="col-md-4">
                                         <div class="position-relative form-group">
                                             <h5><strong>Sub kategori materi : </strong></h5>
-                                            <select class="mb-2 mt-2 form-control-lg form-control caps" name="subkategori">
+                                            <select class="mb-2 mt-2 form-control-lg form-control caps" id="subkategori">
                                                 <option disabled>-- Pilih Kategori Materi --</option>
                                             </select>
                                         </div>
@@ -88,17 +90,17 @@
                                             <select class="mb-2 mt-2 form-control-lg form-control" name="level">
                                                 <option disabled>-- Pilih Level Soal --</option>
                                                 <option value="1">Level Mudah</option>
-                                                <option value="2">Large Sedang</option>
-                                                <option value="3">Large Susah</option>
+                                                <option value="2">Level Sedang</option>
+                                                <option value="3">Level Susah</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="col-md-8">
-                                        <div class="position-relative form-group" name="kelas">
+                                        <div class="position-relative form-group">
                                             <h5><strong>Tingkat Evaluasi Soal : </strong></h5>
-                                            <select class="mb-2 mt-2 form-control-lg form-control">
+                                            <select class="mb-2 mt-2 form-control-lg form-control" name="kelas">
                                                 <option disabled>-- Pilih Kelas --</option>
                                                 <option value="1">Kelas 1</option>
                                                 <option value="2">Kelas 2</option>
@@ -113,7 +115,10 @@
                                     <div class="col-md-8">
                                         <div class="position-relative form-group">
                                             <h5><strong>Tulis pertanyaan yang ingin dibuat :</strong></h5>
-                                            <textarea type="text" class="form-control" name="note" style="min-height: 20vh;"></textarea>
+                                            <textarea type="text" class="form-control" name="question" style="min-height: 20vh;" id="question"></textarea>
+                                            <div class="float-right text-light mt-1 mb-1">
+                                                <button type="button" id="question-math" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">Tambahkan Rumus</button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -143,19 +148,22 @@
                                             <h5><strong>Pilihan ganda dari soal yang diberikan : </strong></h5>
                                             <div class="row pb-1">
                                                 <div class="col-md-6">
-                                                    <input name="nilai" type="text" class="mt-2 form-control-lg form-control caps" id="target" placeholder="A">
+                                                    <input name="A" type="text" class="mt-2 form-control-lg form-control" placeholder="A">
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input name="nilai" type="text" class="mt-2 form-control-lg form-control caps" id="target" placeholder="B">
+                                                    <input name="B" type="text" class="mt-2 form-control-lg form-control" placeholder="B">
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <input name="nilai" type="text" class="mt-2 form-control-lg form-control caps" id="target" placeholder="C">
+                                                    <input name="C" type="text" class="mt-2 form-control-lg form-control" placeholder="C">
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input name="nilai" type="text" class="mt-2 form-control-lg form-control caps" id="target" placeholder="D">
+                                                    <input name="D" type="text" class="mt-2 form-control-lg form-control" placeholder="D">
                                                 </div>
+                                            </div>
+                                            <div class="float-right text-light mt-1 mb-1">
+                                                <button type="button" id="answer-math" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModal">Tambahkan Rumus</button>
                                             </div>
                                         </div>
                                     </div>
@@ -201,6 +209,8 @@
                             <button class="btn sw-btn-save" type="submit">Simpan</button>
                         </div>
                     </form>
+                    <div id="toast-container" class="toast-top-right" style="margin-top:8vh">
+                    </div>
                 </div>
             </div>
         </div>
@@ -209,10 +219,13 @@
                 tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
             });
         </script>
-        <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
         </script>
         <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/add_exam.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js"></script>
         <?php $this->load->view("admin/_partials/footer.php") ?>
+        <?php $this->load->view("admin/_partials/modals-math.php") ?>
 </body>
 
 </html>
