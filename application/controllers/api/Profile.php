@@ -68,7 +68,7 @@ class Profile extends REST_Controller
                 'password' => md5($this->post('password')),
                 'role' => strip_tags($this->post('role')),
             );
-            
+
             if ($upload['status']) {
                 $insert = $this->authModel->insert($userData);
                 $profile = $this->add_profile($insert, $upload['message']);
@@ -102,13 +102,16 @@ class Profile extends REST_Controller
     // fungsi untuk memperbaharui data profile pengguna
     public function update_post()
     {
+        // $this->response($_FILES["file"]['name']);
+        // var_dump($_FILES["file"]['name']);
+        // die();
         // put method harus menggunakan x-www-form-urlencode
         $id = $this->post('id');
         $role = $this->post('role') == 'murid' ? "students/" : "staff/";
         $dir = "upload/profile/" . $role;
         if (!empty($this->post('username'))) {
-        $validator = new Validator;
-        $this->profile_validate($validator, $type = 'update');
+            $validator = new Validator;
+            $this->profile_validate($validator, $type = 'update');
         }
 
         $con['returnType'] = 'single';
@@ -171,10 +174,18 @@ class Profile extends REST_Controller
 
             // Check if the user data is updated
             if ($update) {
+                $this->post('role') == 'murid' ? $con['joinData'] = 'murid' : false;
+                $this->post('role') == 'guru' ? $con['joinData'] = 'guru' : false;
+
+                $con['id'] = $result['idUsers'];
+
+                $data = $this->authModel->getRows($con);
+                $result = $this->get_data($data, $this->post('role'));
                 // Set the response and exit
                 $this->response([
-                    'status' => TRUE,
-                    'message' => 'Pengguna berhasil diperbaharui'
+                    'status'    => TRUE,
+                    'message'   => 'Pengguna berhasil diperbaharui',
+                    'result'    => $result
                 ], REST_Controller::HTTP_OK);
             } else {
                 // Set the response and exit
