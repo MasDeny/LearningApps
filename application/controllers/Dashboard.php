@@ -67,21 +67,24 @@ class Dashboard extends CI_Controller
     {
         $data['title'] = "List Exam";  
         $data['subtitle'] = "pretest"; 
-        $this->load->view('admin/Exam/ListExamPreTest', $data);
+        $data['track'] = 'Soal Exam';
+        $this->load->view('admin/Exam/ListExam', $data);
     }
 
     public function dailyexam()
     {
         $data['title'] = "List Exam";  
         $data['subtitle'] = "daily"; 
-        $this->load->view('admin/Exam/ListExamDaily', $data);
+        $data['track'] = 'Latihan Soal';
+        $this->load->view('admin/Exam/ListExam', $data);
     }
 
     public function finalexam()
     {
         $data['title'] = "List Exam";  
         $data['subtitle'] = "final"; 
-        $this->load->view('admin/Exam/ListExamFinal', $data);
+        $data['track'] = 'Soal Ujian Akhir';
+        $this->load->view('admin/Exam/ListExam', $data);
     }
 
     public function list_course() 

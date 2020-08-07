@@ -104,13 +104,13 @@ class ExamModel extends CI_Model {
         return $update ? true : false;
     }
 
-    public function delete($id)
-    {
+    public function delete($id){
         //update user from users table
-        $delete = $this->db->delete('idUsers',array('id'=>$id));
+        $this->db->where('idExam',$id);
+        $delete = $this->db->delete($this->userTbl);
         //return the status
         return $delete?true:false;
-    }    
+    }  
 
 }
 

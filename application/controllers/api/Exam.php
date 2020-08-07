@@ -20,7 +20,26 @@ class Exam extends REST_Controller
 
     public function show_get()
     {
+        $id = $this->get('id');
+        $con['returnType'] = 'single';
+        $con['joinData'] = 'all';
+        $con['conditions'] = array(
+            'Exam.idExam' => $id
+        );
 
+        $get = $this->examModel->getRows($con);
+        if (!$get) {
+            $this->response([
+                'status' => False,
+                'message' => 'Data not found, please try again'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+        $result = $this->do_list($get);
+
+        $this->response([
+            'status' => True,
+            'result' => $result
+        ], REST_Controller::HTTP_OK);
     }
 
     public function index_get($id = null)
@@ -326,6 +345,36 @@ class Exam extends REST_Controller
         );
 
         return $profile_data;
+    }
+
+    public function delete_post()
+    {
+        $id = $this->post('id');
+        $con['conditions'] = array(
+            'Exam.idExam' => $id
+        );
+        $get = $this->examModel->getRows($con);
+        if (!$get) {
+            $this->response([
+                'status' => False,
+                'message' => 'Tidak Ditemukan'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+        $delete = $this->examModel->delete($id);
+        if ($delete) {
+            if (!empty($get['images'])) {
+            unlink($get['images']);
+            }
+            $this->response([
+                'status' => True,
+                'message' => 'Sukses Menghapus data'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => False,
+                'message' => 'Gagal Menghapus data'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
     }
 }
 
