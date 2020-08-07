@@ -7,9 +7,9 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 class Process extends REST_Controller {
 
-    public function index()
+    public function submit_post()
     {
-        
+        $this->response($this->post());
     }
 
 }
