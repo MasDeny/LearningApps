@@ -552,7 +552,7 @@ class Profile extends REST_Controller
             'gender'            => $row['gender'],
             'religion'          => $row['religion'],
             'address'           => json_decode($row['address']),
-            'phone'             => (int) $row['phone'],
+            'phone'             => $row['phone'],
             'profilePhoto'      => base_url() . $row['profilePhoto'],
             'device'            => (int) $row['Device'],
             'level'             => $role == 'murid' ? (int) $row['level'] : 0,
