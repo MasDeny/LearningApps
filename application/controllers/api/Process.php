@@ -24,6 +24,7 @@ class Process extends REST_Controller
         $nis = $this->post('nis');
         $class = $this->post('class');
         $value = $this->post('value');
+        $value = json_decode($value, true);
 
         $data = array();
         foreach ($value as $key => $value) {

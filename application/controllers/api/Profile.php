@@ -555,7 +555,7 @@ class Profile extends REST_Controller
             'phone'             => (int) $row['phone'],
             'profilePhoto'      => base_url() . $row['profilePhoto'],
             'device'            => (int) $row['Device'],
-            'level'             => (int) $row['level'],
+            'level'             => $role == 'murid' ? (int) $row['level'] : 0,
             'status'            => $row['Status'] == 0 ? 'deactivate' : 'active',
             'create_time'   => $row['create_time'],
             'update_time'   => $row['update_time']

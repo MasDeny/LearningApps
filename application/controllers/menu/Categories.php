@@ -17,6 +17,7 @@ class Categories extends REST_Controller {
     public function index_get()
     {
         $con['returnType'] = 'getall';
+        $con['joinData'] = 'all';
         $result = $this->categoriesModel->getRows($con);
         if ($result) {
             $this->response([
