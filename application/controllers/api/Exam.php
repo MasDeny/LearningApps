@@ -18,6 +18,11 @@ class Exam extends REST_Controller
         $this->load->library('pagination');
     }
 
+    public function show_get()
+    {
+
+    }
+
     public function index_get($id = null)
     {
         $con['returnType'] = 'getall';
@@ -69,7 +74,6 @@ class Exam extends REST_Controller
             'Exam.idLevel'  => $level
         );
         }
-        $this->response($con);
         $get = $this->examModel->getRows($con);
         if (!$get) {
             $this->response([
