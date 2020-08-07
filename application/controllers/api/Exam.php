@@ -55,12 +55,21 @@ class Exam extends REST_Controller
     {
         $type = $this->post('type');
         $class = $this->post('class');
+        $level = $this->post('level');
         $con['returnType'] = 'getall';
         $con['joinData'] = 'all';
         $con['conditions'] = array(
             'Exam.idType' => $type,
             'Exam.idClass'=> $class
         );
+        if ($level!=null) {
+           $con['conditions'] = array(
+            'Exam.idType'   => $type,
+            'Exam.idClass'  => $class,
+            'Exam.idLevel'  => $level
+        );
+        }
+        $this->response($con);
         $get = $this->examModel->getRows($con);
         if (!$get) {
             $this->response([
