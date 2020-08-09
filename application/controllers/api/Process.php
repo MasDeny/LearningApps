@@ -51,8 +51,6 @@ class Process extends REST_Controller
         
         $correct = count($data) / count($value_str);
 
-        $this->response($correct);
-
         $this->save_log($correct);
         $this->update_level($correct, $nis);
         $this->update_status($row, $type);
