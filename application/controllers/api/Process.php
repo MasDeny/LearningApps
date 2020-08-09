@@ -52,8 +52,12 @@ class Process extends REST_Controller
         $correct = count($data) / count($value_str);
 
         $this->save_log($correct);
+        
+        if ($type!='3') {
         $this->update_level($correct, $nis);
         $this->update_status($row, $type);
+        }
+
         $finalResult = $this->data_list($nis);
         // Set the response and exit
         $this->response([
