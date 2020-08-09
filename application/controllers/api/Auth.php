@@ -87,9 +87,10 @@ class Auth extends REST_Controller
                     'profilePhoto'      => base_url().$profile['profilePhoto'],
                     'device'            => (int) $devicesUpdate['Device'],
                     'level'             => (int) $profile['level'],
+                    'schoolYear'        => $profile['schoolYear'],
                     'status'            => $result['Status'] == 0 ? 'deactivate' : 'active',
-                    'create_time'   => $result['create_time'],
-                    'update_time'   => $result['update_time']
+                    'create_time'       => $result['create_time'],
+                    'update_time'       => $result['update_time']
                 );
 
                 // Set the response and exit
@@ -175,7 +176,7 @@ class Auth extends REST_Controller
                 // Set the response and exit
 
                 $this->response([
-                    'status' => TRUE,
+                    'status' => FALSE,
                     'message' => 'Some problems occurred, please try again.'
                 ], REST_Controller::HTTP_BAD_REQUEST);
             }

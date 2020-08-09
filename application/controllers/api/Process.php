@@ -40,16 +40,26 @@ class Process extends REST_Controller
                 array_push($data, $check);
             }
         }
+
+        $cdu['returnType'] = 'single';
+        $cdu['conditions'] = array(
+            'Students.idStudents' => $nis,
+            // 'status' => 1
+        );
+        $cdu['joinData'] = 'murid';
+        $row = $this->authModel->getRows($cdu);
+        
         $correct = count($data) / count($value);
         $this->save_log($correct);
         $this->update_level($correct, $nis);
-        $finalResult = $this->data_list($correct, $nis);
+        $this->update_status($row, $type);
+        $finalResult = $this->data_list($nis);
         // Set the response and exit
         $this->response([
             'status' => TRUE,
             'message' => 'User login successful.',
             'result' => $finalResult,
-            'points'=> $correct
+            'points' => $correct
         ], REST_Controller::HTTP_OK);
     }
 
@@ -77,38 +87,55 @@ class Process extends REST_Controller
         if ($correct > 0.2) {
 
             if ($correct <= 0.3 && $correct < 0.5) {
-                $userData = array();
-                $userData['level'] = '2';
-                $update = $this->studentModel->update($userData, $id);
+                $profileData = array();
+                $profileData['level'] = '2';
+                $update = $this->studentModel->update($profileData, $id);
             } else {
-                $userData = array();
-                $userData['level'] = '3';
-                $update = $this->studentModel->update($userData, $id);
+                $profileData = array();
+                $profileData['level'] = '3';
+                $update = $this->studentModel->update($profileData, $id);
             }
         } else {
-            $userData = array();
-            $userData['level'] = '1';
-            $update = $this->studentModel->update($userData, $id);
+            $profileData = array();
+            $profileData['level'] = '1';
+            $update = $this->studentModel->update($profileData, $id);
         }
+
         if (!$update) {
             // Set the response and exit
             $this->response([
-                'status' => TRUE,
+                'status' => FALSE,
                 'message' => 'Gagal Mengganti Level'
             ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
 
-    protected function data_list($correct, $nis)
+    protected function update_status($row, $type)
     {
+        $userData = array();
+        $userData['status'] = '1';
+        $updateUser = $this->authModel->update($userData, $row['idUsers']);
+        if (!$updateUser) {
+            if ($type=='1') {
+            $profileData['level'] = '0';
+            $this->studentModel->update($profileData, $row['idStudents']);
+            }
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Gagal Mengganti Level'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
 
-        $con['returnType'] = 'single';
-        $con['conditions'] = array(
+    protected function data_list($nis)
+    {
+        $cdu['returnType'] = 'single';
+        $cdu['conditions'] = array(
             'Students.idStudents' => $nis,
-            // 'status' => 1
         );
-        $con['joinData'] = 'murid';
-        $row = $this->authModel->getRows($con);
+        $cdu['joinData'] = 'murid';
+        $row = $this->authModel->getRows($cdu);
+
         $profile_data = array(
             'id'                => (int) $row['idUsers'],
             'username'          => $row['Username'],
@@ -123,10 +150,12 @@ class Process extends REST_Controller
             'phone'             => $row['phone'],
             'profilePhoto'      => base_url() . $row['profilePhoto'],
             'device'            => (int) $row['Device'],
+            'class'             => (int) $row['class'],
+            'schoolYear'        => $row['schoolYear'],
             'level'             => (int) $row['level'],
             'status'            => $row['Status'] == 0 ? 'deactivate' : 'active',
-            'create_time'   => $row['create_time'],
-            'update_time'   => $row['update_time']
+            'create_time'       => $row['create_time'],
+            'update_time'       => $row['update_time']
         );
         return $profile_data;
     }
