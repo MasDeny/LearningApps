@@ -24,10 +24,10 @@ class Process extends REST_Controller
         $nis = $this->post('nis');
         $class = $this->post('class');
         $value = $this->post('value');
-        $value = json_decode($value, true);
+        $value_str = json_decode($value, true);
 
         $data = array();
-        foreach ($value as $key => $value) {
+        foreach ($value_str as $key => $value) {
             $id = $value['id'];
             $con['returnType'] = 'single';
             $con['joinData'] = 'all';
@@ -49,7 +49,10 @@ class Process extends REST_Controller
         $cdu['joinData'] = 'murid';
         $row = $this->authModel->getRows($cdu);
         
-        $correct = count($data) / count($value);
+        $correct = count($data) / count($value_str);
+
+        $this->response($correct);
+
         $this->save_log($correct);
         $this->update_level($correct, $nis);
         $this->update_status($row, $type);
@@ -59,7 +62,7 @@ class Process extends REST_Controller
             'status' => TRUE,
             'message' => 'User login successful.',
             'result' => $finalResult,
-            'points' => $correct
+            'points' => (double) $correct
         ], REST_Controller::HTTP_OK);
     }
 
@@ -131,7 +134,7 @@ class Process extends REST_Controller
     {
         $cdu['returnType'] = 'single';
         $cdu['conditions'] = array(
-            'Students.idStudents' => $nis,
+            'Students.idStudents' => $nis
         );
         $cdu['joinData'] = 'murid';
         $row = $this->authModel->getRows($cdu);
