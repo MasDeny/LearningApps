@@ -22,11 +22,7 @@ class categoriesModel extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($this->userTbl);
-        $this->db->order_by("Category.idCategory", "asc");
-
-        if (array_key_exists("joinData", $params)) {
-            $this->db->join('SubCategories', 'SubCategories.idCategory=Category.idCategory');
-        }
+        $this->db->order_by("idCategory", "asc");
         //fetch data by conditions
         if (array_key_exists("conditions", $params)) {
             foreach ($params['conditions'] as $key => $value) {

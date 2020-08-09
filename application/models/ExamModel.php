@@ -23,6 +23,10 @@ class ExamModel extends CI_Model {
         $this->db->from($this->userTbl);
         $this->db->order_by("Exam.create_time", "desc");
 
+        if (array_key_exists("groupby", $params)) {
+            $this->db->group_by('Exam.titleExam'); 
+        }
+
         // fetch data join with profile table
         if (array_key_exists("joinData", $params)) {
             $this->db->join('Class', 'Class.idClass=Exam.idClass');
