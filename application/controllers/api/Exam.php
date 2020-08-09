@@ -46,13 +46,14 @@ class Exam extends REST_Controller
     {
         $con['returnType'] = 'getall';
         $con['joinData'] = 'all';
-        $page = $this->pagination($id);
         $con['conditions'] = array(
             'Exam.idType' => $id,
         );
+        $page = $this->pagination($id);
         $con['limit'] = $page['per_page'];
         $con['start'] = $page['start'];
         $get = $this->examModel->getRows($con);
+
         if (!$get) {
             $this->response([
                 'status' => False,
@@ -140,9 +141,9 @@ class Exam extends REST_Controller
             'point'         => strip_tags($this->post('nilai')),
         );
 
-        if ($this->post('type') == '3') {
+        if ($this->post('type') != '1') {
             $userData['category'] = $this->post('kategori');
-            $userData['subCategory'] = $this->post('subkategori');
+            $userData['title'] = $this->post('title');
         }
 
         if (!empty($_FILES["images"]['name'])) {
@@ -243,12 +244,12 @@ class Exam extends REST_Controller
             }
         }
 
-        if ($this->post('type') == 3) {
+        if ($this->post('type') != 1) {
 
             $validate = $validator->make($this->post(), [
                 //validasi user
                 'kategori'      => 'required',
-                'subkategori'   => 'required',
+                'title'   => 'required',
             ]);
 
             $validate->validate();
@@ -313,7 +314,7 @@ class Exam extends REST_Controller
         $choice = $config["total_rows"] / $config["per_page"];
         $config["num_links"] = round($choice);
 
-        $page =  $this->uri->segment(4);
+        $page =  $this->uri->segment(2);
 
         $this->pagination->initialize($config);
         $start = ($page - 1) * $config["per_page"];
@@ -332,7 +333,7 @@ class Exam extends REST_Controller
             'class'         => $row['nameClass'],
             'level'         => $row['nameLevel'],
             'category'      => $row['category'],
-            'subcategory'   => $row['subCategory'],
+            'title'         => $row['titleExam'],
             'question'      => $row['question'],
             'images'        => empty($row['images']) ? null : base_url() . $row['images'],
             'choice'        => json_decode($row['multipleChoice']),

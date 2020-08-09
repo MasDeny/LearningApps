@@ -34,7 +34,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
-                                    <th class="text-center">Nama Guru</th>
+                                    <th>Judul Ujian</th>
                                     <th class="text-center">Jenis Soal</th>
                                     <th class="text-center">Kelas</th>
                                     <th class="text-center">Tingkatan</th>
