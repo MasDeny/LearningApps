@@ -91,7 +91,7 @@ class Exam extends REST_Controller
            $con['conditions'] = array(
             'Exam.idType'   => $type,
             'Exam.idClass'  => $class,
-            'Exam.idLevel'  => $level
+            'Exam.idLevels'  => $level
         );
         }
         $get = $this->examModel->getRows($con);
@@ -314,7 +314,7 @@ class Exam extends REST_Controller
         $choice = $config["total_rows"] / $config["per_page"];
         $config["num_links"] = round($choice);
 
-        $page =  $this->uri->segment(2);
+        $page =  $this->uri->segment(4);
 
         $this->pagination->initialize($config);
         $start = ($page - 1) * $config["per_page"];
