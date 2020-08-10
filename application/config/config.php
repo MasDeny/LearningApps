@@ -23,8 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$localIP = getHostByName(getHostName());
-$config['base_url'] = 'http://'.$localIP.'/learning/public';
+$config['base_url'] = 'http://localhost/learning/public';
 
 /*
 |--------------------------------------------------------------------------
