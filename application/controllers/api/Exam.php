@@ -85,14 +85,14 @@ class Exam extends REST_Controller
         $con['joinData'] = 'all';
         $con['conditions'] = array(
             'Exam.idType' => $type,
-            'Exam.idClass'=> $class
+            'Exam.idClass' => $class
         );
-        if ($level!=null) {
-           $con['conditions'] = array(
-            'Exam.idType'   => $type,
-            'Exam.idClass'  => $class,
-            'Exam.idLevels'  => $level
-        );
+        if ($level != null) {
+            $con['conditions'] = array(
+                'Exam.idType'   => $type,
+                'Exam.idClass'  => $class,
+                'Exam.idLevels'  => $level
+            );
         }
         $get = $this->examModel->getRows($con);
         if (!$get) {
@@ -143,7 +143,7 @@ class Exam extends REST_Controller
 
         if ($this->post('type') != '1') {
             $userData['category'] = $this->post('kategori');
-            $userData['title'] = $this->post('title');
+            $userData['titleExam'] = $this->post('title');
         }
 
         if (!empty($_FILES["images"]['name'])) {
@@ -277,15 +277,15 @@ class Exam extends REST_Controller
     private function pagination($type)
     {
         $cnt['returnType'] = 'count';
-        if (!empty($class)) {
-            $con['conditions'] = array(
+        if (empty($class)) {
+            $cnt['conditions'] = array(
                 'Exam.idType' => $type,
             );
             $cnt['joinData'] = 'all';
         }
 
         $config = array();
-        $config["base_url"] = base_url() . "api/exam/".$type;
+        $config["base_url"] = base_url() . "api/exam/" . $type . "/";
         $config['reuse_query_string'] = true;
         $config["total_rows"] = $this->examModel->getRows($cnt);
         $config["per_page"] = 5;
@@ -364,7 +364,7 @@ class Exam extends REST_Controller
         $delete = $this->examModel->delete($id);
         if ($delete) {
             if (!empty($get['images'])) {
-            unlink($get['images']);
+                unlink($get['images']);
             }
             $this->response([
                 'status' => True,

@@ -67,6 +67,13 @@ $(document).ready(function () {
 	drEvent.data(300);
 	drEvent.destroy();
 	drEvent.init();
+
+	var opt = {};
+	$("#title > option").each(function () {
+		if (opt[$(this).text()]) {
+			$(this).remove();
+		}
+	});
 });
 
 $(document).on("blur", "textarea[name='question']", function () {
@@ -156,7 +163,6 @@ function loadCategories() {
 					"</option>";
 			});
 			$('select[id="kategori"]').html(trHTML);
-			loadSubCategories(1);
 		},
 		error: function (t) {
 			console.log(t);
@@ -164,44 +170,73 @@ function loadCategories() {
 	});
 }
 
-$("select[id=kategori]").change(function () {
-	var id = $(this).children(":selected").attr("id");
-	loadSubCategories(id);
-});
-
-function loadSubCategories(id) {
+function loadTitleExam(kelas, type, level) {
 	$.ajax({
-		url: url + "/menu/subcategories/" + id,
-		type: "get",
+		url: url + "/menu/title",
+		type: "post",
 		dataType: "json",
+		data: { class: kelas, type: type, level: level },
 		success: function (response) {
+			console.log(response);
 			var trHTML = "";
-			$.each(response.message, function (i, item) {
+			$.each(response.result, function (i, item) {
 				trHTML +=
 					'<option class="caps" id="' +
-					item.idSubCategories +
-					'" value="'+ item.subname +'">' +
-					item.subname +
+					'" value="' +
+					item.title +
+					'">' +
+					item.title +
 					"</option>";
 			});
-			$('select[id="subkategori"]').html(trHTML);
+			trHTML += '<option value="new">-- Tambahkan Judul Ujian --</option>';
+			$('select[id="title"]').html(trHTML);
 		},
 		error: function (t) {
-			console.log(t);
+			trHTML =
+				'<option selected="true" disabled>-- Pilih Judul Ujian --</option>' +
+				'<option value="new"> Tambahkan Judul Ujian </option>';
+			$('select[id="title"]').html(trHTML);
 		},
 	});
 }
+
+$("select[id=title]").change(function () {
+	if ($(this).children("option:selected").attr("value") == "new") {
+		add_newTitle();
+	}
+});
+
+function add_newTitle() {
+	var newThing = window.prompt("Masukkan nama judul baru:");
+	if (newThing == null) {
+		return;
+	}
+	trHTML = '<option value="' + newThing + '">' + newThing + "</option>";
+	$(trHTML).insertBefore($("option[value=new]"));
+	return;
+}
+
+$(document).on("change", "select:not(#title, #kategori)", function (e) {
+	var type = $('select[name="type"]').children("option:selected").attr("value");
+	var kelas = $('select[name="kelas"]')
+		.children("option:selected")
+		.attr("value");
+	var level = $('select[name="level"]')
+		.children("option:selected")
+		.attr("value");
+	loadTitleExam(kelas, type, level);
+});
 
 $("select[name=type]").change(function () {
 	var id = $(this).children(":selected").attr("value");
-	if (id == 3) {
+	if (id != 1) {
 		$("[id=content-category]").show();
-		$('#kategori').attr("name", "kategori");
-		$('#subkategori').attr("name", "subkategori");
+		$("#kategori").attr("name", "kategori");
+		$("#title").attr("name", "title");
 	} else {
 		$("[id=content-category]").hide();
-		$('#kategori').removeAttr("name", "kategori");
-		$('#subkategori').removeAttr("name", "subkategori");
+		$("#kategori").removeAttr("name", "kategori");
+		$("#title").removeAttr("name", "title");
 	}
 });
 
@@ -226,10 +261,19 @@ $(document).on("submit", "#submit-exam", function (e) {
 				confirmButtonText: "Tambahkan Lagi Soal",
 				cancelButtonText: "Selesai",
 			}).then((result) => {
+				console.log(result)
 				if (result.value) {
-					setTimeout((window.location = url + "/dashboard/add_exam"), 100);
+					setTimeout((window.location = url + "/dashboard/add_exam", 100));
 				} else {
-					setTimeout((window.location = url + "/dashboard/list_course"), 100);
+					var type = $('select[name=type]').children("option:selected").attr("value");
+					if (type == "1") {
+						var link = url + "dashboard/pretestexam";
+					} else if (type == "2") {
+						var link = url + "dashboard/finalexam";
+					} else {
+						var link = url + "dashboard/dailyexam";
+					}
+					setTimeout((window.location = link), 100);
 				}
 			});
 		},

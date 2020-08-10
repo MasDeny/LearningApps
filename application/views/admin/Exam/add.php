@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/dropify.min.css" />
     <script type="text/javascript" src="<?php echo base_url() ?>assets/scripts/dropify.min.js"></script>
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/mathquill/mathquill.css" />
-  <script src="<?php echo base_url() ?>assets/mathquill/mathquill.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/mathquill/mathquill.min.js"></script>
 </head>
 
 <body data-url="<?php echo base_url() ?>" data-role="<?php echo $this->session->userdata("user_data")["role"] ?>">
@@ -57,35 +57,6 @@
                                 <div class="row justify-content-center">
                                     <div class="col-md-8">
                                         <div class="position-relative form-group">
-                                            <h5><strong>Jenis soal yang dibuat : </strong></h5>
-                                            <select class="mb-2 mt-2 form-control-lg form-control" name="type">
-                                                <option disabled>-- Pilih Jenis --</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row justify-content-center" id="content-category">
-                                    <div class="col-md-4">
-                                        <div class="position-relative form-group">
-                                            <h5><strong>Kategori materi : </strong></h5>
-                                            <select class="mb-2 mt-2 form-control-lg form-control caps" id="kategori">
-                                                <option disabled>-- Pilih Kategori Materi --</option>
-                                                <option>Large Select</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="position-relative form-group">
-                                            <h5><strong>Sub kategori materi : </strong></h5>
-                                            <select class="mb-2 mt-2 form-control-lg form-control caps" id="subkategori">
-                                                <option disabled>-- Pilih Kategori Materi --</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row justify-content-center">
-                                    <div class="col-md-8">
-                                        <div class="position-relative form-group">
                                             <h5><strong>Tingkat Kesulitan Soal : </strong></h5>
                                             <select class="mb-2 mt-2 form-control-lg form-control" name="level">
                                                 <option disabled>-- Pilih Level Soal --</option>
@@ -95,8 +66,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row justify-content-center">
                                     <div class="col-md-8">
                                         <div class="position-relative form-group">
                                             <h5><strong>Tingkat Evaluasi Soal : </strong></h5>
@@ -105,6 +74,32 @@
                                                 <option value="1">Kelas 1</option>
                                                 <option value="2">Kelas 2</option>
                                                 <option value="3">Kelas 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="position-relative form-group">
+                                            <h5><strong>Jenis soal yang dibuat : </strong></h5>
+                                            <select class="mb-2 mt-2 form-control-lg form-control" name="type">
+                                                <option disabled>-- Pilih Jenis --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center" id="content-category">
+                                    <div class="col-md-8">
+                                        <div class="position-relative form-group">
+                                            <h5><strong>Kategori Soal : </strong></h5>
+                                            <select class="mb-2 mt-2 form-control-lg form-control caps" id="kategori">
+                                                <option disabled>-- Pilih Kategori Materi --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="position-relative form-group">
+                                            <h5><strong>Judul Ujian : </strong></h5>
+                                            <select class="mb-2 mt-2 form-control-lg form-control caps" id="title">
+                                                <option disabled>-- Pilih Judul Ujian --</option>
                                             </select>
                                         </div>
                                     </div>

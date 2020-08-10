@@ -43,14 +43,23 @@ function show_table(response) {
 		var locked = item.status == "active" ? "lock" : "unlock";
 		var text = item.status == "1" ? "active" : item.status == "2" ? "expired" : "deactive" ;
         var numb = i+1
+		var examtitle = type=='pretestexam' ? "Ujian Pretest" : item.title;
 		trHTML +=
 			"<tr>" +
 			'<td class="text-center text-muted" >' +
 			numb +
 			"</td>" +
-			'<td class="text-center">' +
-			item.nama_guru +
-			"</td>" +
+			'<td>' +
+            '<div class="widget-content p-0">' +
+            '<div class="widget-content-wrapper">' +
+            '<div class="widget-content-left flex2">' +
+            '<div class="widget-heading">' + examtitle + '</div>' +
+            '<div class="widget-subheading opacity-7">Kelas ' + item.nama_guru +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
 			'<td class="text-center">' +
 			item.jenis_soal +
 			"</td>" +
@@ -87,6 +96,10 @@ function show_table(response) {
 	});
 	$("#table_view").html(trHTML);
 }
+
+$(document).on("click", ".pagination li a", function (t) {
+        t.preventDefault(), loadPagination($(this).data("ci-pagination-page"), a);
+    })
 
 $(document).on("click", "#btn-remove", function (event) {
     var id = $(this).attr('data-id');
