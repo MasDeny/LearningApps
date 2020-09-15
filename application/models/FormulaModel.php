@@ -1,7 +1,8 @@
 <?php 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class processModel extends CI_Model {
+class formulaModel extends CI_Model
+{
 
     /*
      * Insert user data
@@ -14,24 +15,7 @@ class processModel extends CI_Model {
         // Load the database library
         $this->load->database();
 
-        $this->userTbl = 'TransactionScores';
-    }
-
-    public function insert($data)
-    {
-        //add created and modified date if not exists
-        if (!array_key_exists("create_time", $data)) {
-            $data['create_time'] = date("Y-m-d H:i:s");
-        }
-        if (!array_key_exists("update_time", $data)) {
-            $data['update_time'] = date("Y-m-d H:i:s");
-        }
-
-        //insert user data to users table
-        $insert = $this->db->insert($this->userTbl, $data);
-
-        //return the status
-        return $insert ? $this->db->insert_id() : false;
+        $this->userTbl = 'Formula';
     }
 
     /*
@@ -41,8 +25,7 @@ class processModel extends CI_Model {
     {
         $this->db->select('*');
         $this->db->from($this->userTbl);
-        $this->db->order_by("create_time", "desc");
-        
+
         //fetch data by conditions
         if (array_key_exists("conditions", $params)) {
             foreach ($params['conditions'] as $key => $value) {
@@ -52,7 +35,7 @@ class processModel extends CI_Model {
 
 
         if (array_key_exists("id", $params)) {
-            $this->db->where('idStudents', $params['id']);
+            $this->db->where('idformula', $params['id']);
             $query = $this->db->get();
             $result = $query->row_array();
         } else {
@@ -63,7 +46,7 @@ class processModel extends CI_Model {
             } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                 $this->db->limit($params['limit']);
             }
-            
+
             if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
                 $result = $this->db->count_all_results();
             } elseif (array_key_exists("returnType", $params) && $params['returnType'] == 'single') {
@@ -78,8 +61,6 @@ class processModel extends CI_Model {
         //return fetched data
         return $result;
     }
-
-
 }
 
-/* End of file processModel.php */
+/* End of file formulaModels.php */

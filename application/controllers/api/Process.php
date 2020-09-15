@@ -16,6 +16,7 @@ class Process extends REST_Controller
         $this->load->model('processModel');
         $this->load->model('studentModel');
         $this->load->model('authModel');
+        $this->load->model('formulaModel');
     }
 
     public function submit_post()
@@ -48,23 +49,26 @@ class Process extends REST_Controller
         );
         $cdu['joinData'] = 'murid';
         $row = $this->authModel->getRows($cdu);
-        
+
         $correct = count($data) / count($value_str);
+
+        if ($type != '3') {
+            $this->update_level($correct, $nis);
+            $this->update_status($row, $type);
+        } else {
+            $this->final_exam($correct, $nis);
+        }
 
         $this->save_log($correct);
         
-        if ($type!='3') {
-        $this->update_level($correct, $nis);
-        $this->update_status($row, $type);
-        }
-
         $finalResult = $this->data_list($nis);
+        
         // Set the response and exit
         $this->response([
             'status' => TRUE,
             'message' => 'User login successful.',
             'result' => $finalResult,
-            'points' => (double) $correct
+            'points' => (float) $correct
         ], REST_Controller::HTTP_OK);
     }
 
@@ -91,13 +95,13 @@ class Process extends REST_Controller
     {
         if ($correct > 0.2) {
 
-            if ($correct <= 0.3 && $correct < 0.5) {
+            if ($correct >= 0.5) {
                 $profileData = array();
-                $profileData['level'] = '2';
+                $profileData['level'] = '3';
                 $update = $this->studentModel->update($profileData, $id);
             } else {
                 $profileData = array();
-                $profileData['level'] = '3';
+                $profileData['level'] = '2';
                 $update = $this->studentModel->update($profileData, $id);
             }
         } else {
@@ -115,15 +119,125 @@ class Process extends REST_Controller
         }
     }
 
+    protected function final_exam($nilai, $id)
+    {
+        $L = $this->practice_exam();
+        $U = $this->last_exam();
+        $con['conditions'] = array(
+            'Ujian'     => $U,
+            'Latihan'   => $L
+        );
+        $con['returnType'] = 'single';
+        $formula = $this->formulaModel->getRows($con);
+
+        if ($nilai > (float)$formula['R2']) {
+
+            if ($nilai >= (float)$formula['R3']) {
+                $profileData = array();
+                $profileData['level'] = '3';
+                $update = $this->studentModel->update($profileData, $id);
+            } else {
+                $profileData = array();
+                $profileData['level'] = '2';
+                $update = $this->studentModel->update($profileData, $id);
+            }
+        } else {
+            $profileData = array();
+            $profileData['level'] = '1';
+            $update = $this->studentModel->update($profileData, $id);
+        }
+
+        if (!$update) {
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Gagal Mengganti Level'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
+    private function practice_exam()
+    {
+        $con['conditions'] = array(
+            'idStudent' => $this->post('nis'),
+            'class' => $this->post('class'),
+            'typeExam' => 2
+        );
+        $con['limit'] = 3;
+        $practice = $this->processModel->getRows($con);
+        $data = array();
+        foreach ($practice as $row) {
+            array_push($data, $row['studentScore']);
+        }
+        // if(count($practice) < 3) {
+        //     $this->response([
+        //         'status' => FALSE,
+        //         'message' => 'Harap Menyelesaikan Seluruh Latihan Soal'
+        //     ], REST_Controller::HTTP_BAD_REQUEST);
+        // }
+        $sum_practice = array_sum($data) / 3;
+        if ($sum_practice > 0.3) {
+
+            if ($sum_practice >= 0.3 && $sum_practice < 0.5) {
+                $profileData = array();
+                $profileData = 'L2';
+            } else {
+                $profileData = array();
+                $profileData = 'L3';
+            }
+        } else {
+            $profileData = array();
+            $profileData = 'L1';
+        }
+        return $profileData;
+    }
+
+    private function last_exam()
+    {
+        // check last exam
+        $con['conditions'] = array(
+            'idStudent' => $this->post('nis'),
+            'class' => $this->post('class'),
+            'typeExam' => 3
+        );
+        $last = $this->processModel->getRows($con);
+        if (!$last) {
+            $con['conditions'] = array(
+                'idStudent' => $this->post('nis'),
+                'class' => $this->post('class'),
+                'typeExam' => 1
+            );
+            $last = $this->processModel->getRows($con);
+            $sum_last = $last[0]['studentScore'];
+        } else {
+            $sum_last = $last[0]['studentScore'];
+        }
+
+        if ($sum_last > 0.2) {
+
+            if ($sum_last >= 0.5) {
+                $profileData = array();
+                $profileData = 'U3';
+            } else {
+                $profileData = array();
+                $profileData = 'U2';
+            }
+        } else {
+            $profileData = array();
+            $profileData = 'U1';
+        }
+        return $profileData;
+    }
+
     protected function update_status($row, $type)
     {
         $userData = array();
         $userData['status'] = '1';
         $updateUser = $this->authModel->update($userData, $row['idUsers']);
         if (!$updateUser) {
-            if ($type=='1') {
-            $profileData['level'] = '0';
-            $this->studentModel->update($profileData, $row['idStudents']);
+            if ($type == '1') {
+                $profileData['level'] = '0';
+                $this->studentModel->update($profileData, $row['idStudents']);
             }
             $this->response([
                 'status' => FALSE,
